@@ -16,7 +16,7 @@ def submitjob(count,txtfile):
             submittemp.write(line)
     submitfile.close()
     dummy='dummy'
-    submittemp.write("arguments = "+txtfile.split('/')[-1]+" "+dummy+" "+dummy+"  "+txtfile.split('/')[-1].replace('.txt','.root')+" "+"$(Proxy_path)"+'\nqueue')
+    submittemp.write("arguments = "+txtfile.split('/')[-1]+" "+dummy+" "+dummy+"  "+txtfile.split('/')[-1].replace('.txt','.root')+" $(Proxy_path)"+'\nqueue')
     submittemp.close()
 
 
