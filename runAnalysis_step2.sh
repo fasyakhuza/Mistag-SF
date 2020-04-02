@@ -25,7 +25,7 @@ voms-proxy-info -all -file $5
 python monoHbbAnalyzer.py -F -i "$1"
 
 if [ -e "$4" ]; then
-  until xrdcp -f "$4" /afs/cern.ch/work/f/fkhuzaim/CMSSW_10_3_0/src/ExoPieProducer/ExoPieAnalyzer/CondorJobs/output_test/"$4"; do 
+  until xrdcp -f "$4" root://eoscms.cern.ch//eos/cms/store/group/phys_exotica/monoHiggs/monoHbb/2017_AnalyserOutput/test/"$4"; do 
     sleep 60
     echo "Retrying"
   done
