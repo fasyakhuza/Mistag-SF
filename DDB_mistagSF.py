@@ -7,14 +7,6 @@ import array as arr
 L = 41000.0 #/pb ; integrated luminosity
 
 #---------------------------------#
-#             Data                #
-#---------------------------------#
-
-
-
-
-
-#---------------------------------#
 #         TTtoSemileptonic        #
 #---------------------------------#
 
@@ -22,11 +14,11 @@ Top_path = "combined_crab_TTToSemiLeptonic_TuneCP5_PSweights_13TeV-powheg-pythia
 
 xsTop = 300.9498
 
-h_TopMatch = TH1F("h_TopMatch", "", 16, 0.0, 1.0)
-h_Wmatch = TH1F("h_Wmatch", "", 16, 0.0, 1.0)
-h_unmatch = TH1F("h_unmatch", "", 16, 0.0, 1.0)
-h_tt = TH1F("h_tt", "", 16, 0.0, 1.0)
-h_ttPassed = TH1F("h_ttPassed", "", 16, 0.0, 1.0)
+h_TopMatch = TH1F("h_TopMatch", "", 50, 0.0, 1.0)
+h_Wmatch = TH1F("h_Wmatch", "", 50, 0.0, 1.0)
+h_unmatch = TH1F("h_unmatch", "", 50, 0.0, 1.0)
+h_tt = TH1F("h_tt", "", 50, 0.0, 1.0)
+h_ttPassed = TH1F("h_ttPassed", "", 50, 0.0, 1.0)
 
 openTop = TFile(Top_path, "read")
 h_total_mcweight_Top = openTop.Get("h_total_mcweight")
@@ -40,15 +32,15 @@ for i in range(EventsTop):
     CSV_Top = getattr(treeTop, 'FJetCSV')
     SD_Top = getattr(treeTop, 'FJetMass')
     dPhi_Top = getattr(treeTop, 'min_dPhi')
-    if (st_TopMatching == 2) and (SD_Top > 100.0) and (SD_Top < 150.0) and (dPhi_Top < 0.4):
+    if (st_TopMatching == 2) and (SD_Top > 100.0) and (SD_Top < 150.0) and (dPhi_Top > 0.4):
         h_TopMatch.Fill(CSV_Top)
-    if (st_TopMatching == 3) and (SD_Top > 100.0) and (SD_Top < 150.0) and (dPhi_Top < 0.4):
+    if (st_TopMatching == 3) and (SD_Top > 100.0) and (SD_Top < 150.0) and (dPhi_Top > 0.4):
         h_Wmatch.Fill(CSV_Top)
-    if (st_TopMatching == 4) and (SD_Top > 100.0) and (SD_Top < 150.0) and (dPhi_Top < 0.4):
+    if (st_TopMatching == 4) and (SD_Top > 100.0) and (SD_Top < 150.0) and (dPhi_Top > 0.4):
         h_unmatch.Fill(CSV_Top)
-    if (SD_Top > 100.0) and (SD_Top < 150.0) and (dPhi_Top < 0.4):
+    if (SD_Top > 100.0) and (SD_Top < 150.0) and (dPhi_Top > 0.4) and (CSV_Top <= 0.86):
         h_tt.Fill(CSV_Top)
-    if (SD_Top > 100.0) and (SD_Top < 150.0) and (dPhi_Top < 0.4) and (CSV_Top > 0.86):
+    if (SD_Top > 100.0) and (SD_Top < 150.0) and (dPhi_Top > 0.4) and (CSV_Top > 0.86):
         h_ttPassed.Fill(CSV_Top)
 
 h_TopMatch = h_TopMatch*(L*xsTop/totalEventsTop)
@@ -67,8 +59,8 @@ WJets_files = ["combined_crab_WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-p
 
 xsWJets = [407.9, 57.48, 12.87, 5.366, 1.074, 0.008001]
 
-h_WJets = TH1F("h_WJets", "", 16, 0.0, 1.0)
-h_sumWJets = TH1F("h_sumWJets", "", 16, 0.0, 1.0)
+h_WJets = TH1F("h_WJets", "", 50, 0.0, 1.0)
+h_sumWJets = TH1F("h_sumWJets", "", 50, 0.0, 1.0)
 
 for k in range(len(WJets_files)):
     openWJets = TFile(WJets_files[k], "read")
@@ -82,7 +74,7 @@ for k in range(len(WJets_files)):
         CSV_WJets = getattr(treeWJets, 'FJetCSV')
         SD_WJets = getattr(treeWJets, 'FJetMass')
         dPhi_WJets = getattr(treeWJets, 'min_dPhi')
-        if (SD_WJets > 100.0) and (SD_WJets < 150.0) and (dPhi_WJets < 0.4):
+        if (SD_WJets > 100.0) and (SD_WJets < 150.0) and (dPhi_WJets > 0.4):
             h_WJets.Fill(CSV_WJets)
 
     h_WJets = h_WJets*(L*xsWJets[k]/totalEventsWJets)
@@ -99,8 +91,8 @@ Diboson_files = ["combined_crab_ZZ_TuneCP5_13TeV-pythia8.root","crab_WZ_TuneCP5_
 
 xsDiboson = [12.14, 27.6, 27.6]
 
-h_Diboson = TH1F("h_Diboson", "", 16, 0.0, 1.0)
-h_sumDiboson = TH1F("h_sumDiboson", "", 16, 0.0, 1.0)
+h_Diboson = TH1F("h_Diboson", "", 50, 0.0, 1.0)
+h_sumDiboson = TH1F("h_sumDiboson", "", 50, 0.0, 1.0)
 
 for k in range(len(Diboson_files)):
     openDiboson = TFile(Diboson_files[k], "read")
@@ -114,7 +106,7 @@ for k in range(len(Diboson_files)):
         CSV_Diboson = getattr(treeDiboson, 'FJetCSV')
         SD_Diboson = getattr(treeDiboson, 'FJetMass')
         dPhi_Diboson = getattr(treeDiboson, 'min_dPhi')
-        if (SD_Diboson > 100.0) and (SD_Diboson < 150.0) and (dPhi_Diboson < 0.4):
+        if (SD_Diboson > 100.0) and (SD_Diboson < 150.0) and (dPhi_Diboson > 0.4):
             h_Diboson.Fill(CSV_Diboson)
 
     h_Diboson = h_Diboson*(L*xsDiboson[k]/totalEventsDiboson)
@@ -125,76 +117,6 @@ for k in range(len(Diboson_files)):
 
 '''
 #---------------------------------#
-#              Diboson            #
-#---------------------------------#
-##               WW              ##
-#---------------------------------#
-
-WW_path = ""
-
-h_WW = TH1F("h_WW", "", 20, 0.0, 1.0)
-
-openWW = TFile(WW_path, "read")
-h_total_mcweight_WW = openWW.Get("h_total_mcweight")
-totalEventsWW = h_total_mcweight_WW.Integral()
-treeWW = openWW.Get("monoHbb_Tope_boosted")
-EventsWW = treeWW.GetEntries()
-
-for i in range(EventsWW):
-    treeWW.GetEntry(i)
-    CSV_WW = getattr(treeWW, 'FJetCSV')
-    SD_WW = getattr(treeWW, 'FJetMass')
-    dPhi_WW = getattr(treeWW, 'min_dPhi')
-    if (SD_WW > 100.0) and (SD_WW < 150.0) and (dPhi_WW < 0.4):
-        h_WW.Fill(CSV_WW)
-
-#---------------------------------#
-##               WZ              ##
-#---------------------------------#
-
-WZ_path = ""
-
-h_WZ = TH1F("h_WZ", "", 20, 0.0, 1.0)
-
-openWZ = TFile(WZ_path, "read")
-h_total_mcweight_WZ = openWZ.Get("h_total_mcweight")
-totalEventsWZ = h_total_mcweight_WZ.Integral()
-treeWZ = openWZ.Get("monoHbb_Tope_boosted")
-EventsWZ = treeWZ.GetEntries()
-
-for i in range(EventsWZ):
-    treeWZ.GetEntry(i)
-    CSV_WZ = getattr(treeWZ, 'FJetCSV')
-    SD_WZ = getattr(treeWZ, 'FJetMass')
-    dPhi_WZ = getattr(treeWZ, 'min_dPhi')
-    if (SD_WZ > 100.0) and (SD_WZ < 150.0) and (dPhi_WZ < 0.4):
-        h_WZ.Fill(CSV_WZ)
-
-#---------------------------------#
-##               ZZ              ##
-#---------------------------------#
-
-ZZ_path = ""
-
-h_ZZ = TH1F("h_ZZ", "", 20, 0.0, 1.0)
-
-openZZ = TFile(ZZ_path, "read")
-h_total_mcweight_ZZ = openZZ.Get("h_total_mcweight")
-totalEventsZZ = h_total_mcweight_ZZ.Integral()
-treeZZ = openZZ.Get("monoHbb_Tope_boosted")
-EventsZZ = treeZZ.GetEntries()
-
-for i in range(EventsZZ):
-    treeZZ.GetEntry(i)
-    CSV_ZZ = getattr(treeZZ, 'FJetCSV')
-    SD_ZZ = getattr(treeZZ, 'FJetMass')
-    dPhi_ZZ = getattr(treeZZ, 'min_dPhi')
-    if (SD_ZZ > 100.0) and (SD_ZZ < 150.0) and (dPhi_ZZ < 0.4):
-        h_ZZ.Fill(CSV_ZZ)
-
-
-
-#---------------------------------#
 #               DATA              #
 #---------------------------------#
 ##       Single Electron         ##
@@ -202,7 +124,7 @@ for i in range(EventsZZ):
 
 SE_path = "combined_data_SE.root"
 
-h_SE = TH1F("h_SE", "", 20, 0.0, 1.0)
+h_SE = TH1F("h_SE", "", 50, 0.0, 1.0)
 
 openSE = TFile(SE_path, "read")
 h_total_mcweight_SE = openSE.Get("h_total_mcweight")
@@ -215,7 +137,7 @@ for i in range(EventsSE):
     CSV_SE = getattr(treeSE, 'FJetCSV')
     SD_SE = getattr(treeSE, 'FJetMass')
     dPhi_SE = getattr(treeSE, 'min_dPhi')
-    if (SD_SE > 100.0) and (SD_SE < 150.0) and (dPhi_SE < 0.4):
+    if (SD_SE > 100.0) and (SD_SE < 150.0) and (dPhi_SE > 0.4):
         h_SE.Fill(CSV_SE)
 '''
 
@@ -223,11 +145,11 @@ for i in range(EventsSE):
 
 #------------Overlap histograms-------------#
 
-h_TopMatchFinal = TH1F("h_TopMatchFinal", "", 16, 0.0, 1.0)
-h_WmatchFinal = TH1F("h_WmatchFinal", "", 16, 0.0, 1.0)
-h_unmatchFinal = TH1F("h_unmatchFinal", "", 16, 0.0, 1.0)
-h_sumWJetsFinal = TH1F("h_sumWJetsFinal", "", 16, 0.0, 1.0)
-#h_sumDibosonFinal = TH1F("h_sumDibosonFinal", "", 20, 0.0, 1.0)
+h_TopMatchFinal = TH1F("h_TopMatchFinal", "", 50, 0.0, 1.0)
+h_WmatchFinal = TH1F("h_WmatchFinal", "", 50, 0.0, 1.0)
+h_unmatchFinal = TH1F("h_unmatchFinal", "", 50, 0.0, 1.0)
+h_sumWJetsFinal = TH1F("h_sumWJetsFinal", "", 50, 0.0, 1.0)
+#h_sumDibosonFinal = TH1F("h_sumDibosonFinal", "", 50, 0.0, 1.0)
 
 h_TopMatchFinal = h_TopMatch + h_Wmatch + h_unmatch + h_sumWJets + h_sumDiboson
 h_WmatchFinal = h_Wmatch + h_unmatch + h_sumWJets + h_sumDiboson
@@ -246,25 +168,25 @@ leg.SetTextSize(0.027)
 
 #lt1 = TLatex()
 
-h_TopMatchFinal.SetFillColor(822)
-h_TopMatchFinal.SetLineColor(922)
+h_TopMatchFinal.SetFillColor(821)
+h_TopMatchFinal.SetLineColor(923)
 h_TopMatchFinal.GetXaxis().SetTitle("Double b score")
 h_TopMatchFinal.GetYaxis().SetTitle("Events/Bin")
 leg.AddEntry(h_TopMatchFinal, "Top (mtch.)", "f")
 
-h_WmatchFinal.SetFillColor(434)
+h_WmatchFinal.SetFillColor(822)
 h_WmatchFinal.SetLineColor(923)
 h_WmatchFinal.GetXaxis().SetTitle("Double b score")
 h_WmatchFinal.GetYaxis().SetTitle("Events/Bin")
 leg.AddEntry(h_WmatchFinal, "Top (W-mtch.)","f")
 
-h_unmatchFinal.SetFillColor(862)
+h_unmatchFinal.SetFillColor(813)
 h_unmatchFinal.SetLineColor(923)
 h_unmatchFinal.GetXaxis().SetTitle("Double b score")
 h_unmatchFinal.GetYaxis().SetTitle("Events/Bin")
 leg.AddEntry(h_unmatchFinal, "Top (unmtch.)","f")
 
-h_sumWJetsFinal.SetFillColor(408)
+h_sumWJetsFinal.SetFillColor(854)
 h_sumWJetsFinal.SetLineColor(923)
 h_sumWJetsFinal.GetXaxis().SetTitle("Double b score")
 h_sumWJetsFinal.GetYaxis().SetTitle("Events/Bin")
@@ -316,12 +238,14 @@ h_tt.SetFillColor(821)
 h_tt.SetLineColor(922)
 h_tt.GetXaxis().SetTitle("Double b score")
 h_tt.GetYaxis().SetTitle("Events/Bin")
+h_tt.SetMaximum(200.0)
 leg2.AddEntry(h_tt, "t#bar{t}", "f")
 
 h_ttPassed.SetFillColor(622)
 h_ttPassed.SetLineColor(922)
 h_ttPassed.GetXaxis().SetTitle("Double b score")
 h_ttPassed.GetYaxis().SetTitle("Events/Bin")
+h_ttPassed.SetMaximum(200.0)
 leg2.AddEntry(h_ttPassed, "t#bar{t} mistag", "f")
 
 #-------Draw Histogram in c2---------#
@@ -341,9 +265,10 @@ c2.Modified()
 c2.Update()
 c2.SaveAs("test2.pdf")
 
+'''
 #------------Overlap histograms in c3-------------#
 
-c3 = TCanvas("c2","c2",900,700) #width-height
+c3 = TCanvas("c3","c3",900,700) #width-height
 c3.SetLeftMargin(0.15)
 gStyle.SetOptStat(0)
 
@@ -374,3 +299,4 @@ c3.cd()
 c3.Modified()
 c3.Update()
 c3.SaveAs("test3.pdf")
+'''
