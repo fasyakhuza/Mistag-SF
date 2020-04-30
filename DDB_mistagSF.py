@@ -211,7 +211,7 @@ leg.Draw()
 
 lt = TLatex()
 lt.DrawLatexNDC(0.23,0.85,"#scale[0.8]{CMS} #scale[0.65]{#bf{#it{Preliminary}}}")
-lt.DrawLatexNDC(0.23,0.8,"#scale[0.7]{#bf{t#bar{t} CR (#mu+e)}}")
+lt.DrawLatexNDC(0.23,0.8,"#scale[0.7]{#bf{t#bar{t} CR (e)}}")
 lt.DrawLatexNDC(0.23,0.75,"#scale[0.5]{#bf{2-prong (bq) enriched}}")
 lt.DrawLatexNDC(0.71,0.92,"#scale[0.7]{#bf{41.0 fb^{-1} (13 TeV)}}")
 
@@ -256,7 +256,7 @@ leg2.Draw()
 
 lt2 = TLatex()
 lt2.DrawLatexNDC(0.23,0.85,"#scale[0.8]{CMS} #scale[0.65]{#bf{#it{Preliminary}}}")
-lt2.DrawLatexNDC(0.23,0.8,"#scale[0.7]{#bf{t#bar{t} CR (#mu+e)}}")
+lt2.DrawLatexNDC(0.23,0.8,"#scale[0.7]{#bf{t#bar{t} CR (e)}}")
 lt2.DrawLatexNDC(0.23,0.75,"#scale[0.5]{#bf{2-prong (bq) enriched}}")
 lt2.DrawLatexNDC(0.71,0.92,"#scale[0.7]{#bf{41.0 fb^{-1} (13 TeV)}}")
 
@@ -291,7 +291,7 @@ leg3.Draw()
 
 lt3 = TLatex()
 lt3.DrawLatexNDC(0.23,0.85,"#scale[0.8]{CMS} #scale[0.65]{#bf{#it{Preliminary}}}")
-lt3.DrawLatexNDC(0.23,0.8,"#scale[0.7]{#bf{t#bar{t} CR (#mu+e)}}")
+lt3.DrawLatexNDC(0.23,0.8,"#scale[0.7]{#bf{t#bar{t} CR (e)}}")
 lt3.DrawLatexNDC(0.23,0.75,"#scale[0.5]{#bf{2-prong (bq) enriched}}")
 lt3.DrawLatexNDC(0.71,0.92,"#scale[0.7]{#bf{41.0 fb^{-1} (13 TeV)}}")
 
