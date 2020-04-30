@@ -186,21 +186,21 @@ h_TopMatchFinal.SetFillColor(821)
 h_TopMatchFinal.SetLineColor(923)
 h_TopMatchFinal.GetXaxis().SetTitle("Double b score")
 h_TopMatchFinal.GetYaxis().SetTitle("Events/Bin")
-leg.AddEntry(h_TopMatchFinal, "Top (mtch.)", "f")
+leg.AddEntry(h_TopMatchFinal, "Top (mtch.) (32.37%)", "f")
 
 h_WmatchFinal.Rebin(2)
 h_WmatchFinal.SetFillColor(822)
 h_WmatchFinal.SetLineColor(923)
 h_WmatchFinal.GetXaxis().SetTitle("Double b score")
 h_WmatchFinal.GetYaxis().SetTitle("Events/Bin")
-leg.AddEntry(h_WmatchFinal, "Top (W-mtch.)","f")
+leg.AddEntry(h_WmatchFinal, "Top (W-mtch.) (9.63%)","f")
 
 h_unmatchFinal.Rebin(2)
 h_unmatchFinal.SetFillColor(813)
 h_unmatchFinal.SetLineColor(923)
 h_unmatchFinal.GetXaxis().SetTitle("Double b score")
 h_unmatchFinal.GetYaxis().SetTitle("Events/Bin")
-leg.AddEntry(h_unmatchFinal, "Top (unmtch.)","f")
+leg.AddEntry(h_unmatchFinal, "Top (unmtch.) (58.0%)","f")
 
 h_sumWJetsFinal.Rebin(2)
 h_sumWJetsFinal.SetFillColor(854)
@@ -266,7 +266,7 @@ h_ttPassed.SetLineColor(922)
 h_ttPassed.GetXaxis().SetTitle("Double b score")
 h_ttPassed.GetYaxis().SetTitle("Events/Bin")
 h_ttPassed.SetMaximum(350.0)
-leg2.AddEntry(h_ttPassed, "t#bar{t} mistag", "f")
+leg2.AddEntry(h_ttPassed, "t#bar{t} mistag (17.79%)", "f")
 
 #-------Draw Histogram in c2---------#
 
