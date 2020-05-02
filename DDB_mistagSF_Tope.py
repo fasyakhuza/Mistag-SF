@@ -128,7 +128,7 @@ for k in range(len(Diboson_files)):
 
 
 
-'''
+
 #---------------------------------#
 #               DATA              #
 #---------------------------------#
@@ -152,8 +152,9 @@ for i in range(EventsSE):
     dPhi_SE = getattr(treeSE, 'min_dPhi')
     if (SD_SE > 100.0) and (SD_SE < 150.0) and (dPhi_SE > 0.4):
         h_SE.Fill(CSV_SE)
-'''
 
+SubtractedData = TH1F("SubtractedData", "", 50, 0.0, 1.0)
+SubtractedData = h_SE - (h_sumWJets + h_sumDiboson)
 
 
 #------------Overlap histograms-------------#
@@ -216,7 +217,13 @@ h_sumDiboson.GetXaxis().SetTitle("Double b score")
 h_sumDiboson.GetYaxis().SetTitle("Events/Bin")
 leg.AddEntry(h_sumDiboson, "Diboson","f")
 
-
+h_SE.Rebin(2)
+h_SE.SetLineColor(1)
+h_SE.SetMarkerStyle(20)
+h_SE.SetMarkerSize(1.5)
+h_SE.GetXaxis().SetTitle("Double b score")
+h_SE.GetYaxis().SetTitle("Events/Bin")
+leg.AddEntry(h_SE, "Data", "lep")
 
 #-------Draw Histogram in c1---------#
 
@@ -225,6 +232,7 @@ h_WmatchFinal.Draw("histsame")
 h_unmatchFinal.Draw("histsame")
 h_sumWJetsFinal.Draw("histsame")
 h_sumDiboson.Draw("histsame")
+h_SE.Draw("e1same")
 leg.Draw()
 
 lt = TLatex()
@@ -268,10 +276,19 @@ h_ttPassed.GetYaxis().SetTitle("Events/Bin")
 h_ttPassed.SetMaximum(350.0)
 leg2.AddEntry(h_ttPassed, "t#bar{t} mistag (17.79%)", "f")
 
+SubtractedData.Rebin(2)
+SubtractedData.SetLineColor(1)
+SubtractedData.SetMarkerStyle(20)
+SubtractedData.SetMarkerSize(1.5)
+SubtractedData.GetXaxis().SetTitle("Double b score")
+SubtractedData.GetYaxis().SetTitle("Events/Bin")
+leg2.AddEntry(SubtractedData, "Data", "lep")
+
 #-------Draw Histogram in c2---------#
 
 h_ttFailed.Draw("hist")
 h_ttPassed.Draw("histsame")
+SubtractedData.Draw("e1same")
 leg2.Draw()
 
 lt2 = TLatex()
