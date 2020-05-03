@@ -245,7 +245,7 @@ c1.cd()
 c1.Modified()
 c1.Update()
 c1.SaveAs("Tope_test.pdf")
-
+c1.SaveAs("Tope_test.png")
 
 
 #------------Overlap histograms in c2-------------#
@@ -301,6 +301,7 @@ c2.cd()
 c2.Modified()
 c2.Update()
 c2.SaveAs("Tope_test2.pdf")
+c2.SaveAs("Tope_test2.png")
 
 '''
 #------------Overlap histograms in c3-------------#
@@ -337,4 +338,5 @@ c3.cd()
 c3.Modified()
 c3.Update()
 c3.SaveAs("Tope_test3.pdf")
+c3.SaveAs("Tope_test3.png")
 '''
