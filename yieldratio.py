@@ -6,6 +6,10 @@ from ROOT import TFile, TH1F, TGraph, TGraphAsymmErrors
 import PlotTemplates
 from PlotTemplates import *
 
+import array as arr
+
+nbins = 4
+edges = arr.array('f')
 
 file = TFile("fitDiagnostics.root")
 
@@ -16,8 +20,16 @@ Tope = "shapes_fit_b/TOPE/"
 #getDir = file.cd("shapes_fit_b/TOPE")
 
 #get the histogram inside shapes_fit_b/TOPE
+TopeDYjets = file.Get(Tope+"dyjets")
+for i in range(nbins):
+    low = TopeDYjets.GetXaxis().GetBinLowEdge(i+1)
+    edges.append(low)
+#up = TopeDYjets.GetXaxis().GetBinLowEdge(nbins)
+edges.append(1000.0)
+print edges
+
 Topedata = file.Get(Tope+"data")
-dataTope = TH1F("dataTope","",10,200,1000)
+dataTope = TH1F("dataTope","",nbins,edges)
 nPointsTope = Topedata.GetN()
 for i in range(nPointsTope):
     x = ROOT.Double(0)
@@ -27,12 +39,13 @@ for i in range(nPointsTope):
     dataTope.SetBinContent(k, y)
     dataTope.SetBinError(i+1, Topedata.GetErrorY(i+1))
 Topediboson = file.Get(Tope+"diboson")
-TopeDYjets = file.Get(Tope+"dyjets")
+
 TopeQCD = file.Get(Tope+"qcd")
 TopeST = file.Get(Tope+"singlet")
 TopeSMH = file.Get(Tope+"smh")
 TopeWjets = file.Get(Tope+"wjets")
 
+tt_mc_in_topE = file.Get(Tope+"tt")
 tt_data_in_topE = dataTope - (Topediboson + TopeDYjets + TopeQCD + TopeST + TopeSMH + TopeWjets)
 
 #-----------------------TOPMU-----------------------------#
@@ -41,7 +54,7 @@ Topmu = "shapes_fit_b/TOPMU/"
 
 #get the histogram inside shapes_fit_b/TOPMU
 Topmudata = file.Get(Topmu+"data")
-dataTopmu = TH1F("dataTopmu","",10,200,1000)
+dataTopmu = TH1F("dataTopmu","",nbins,edges)
 nPointsTopmu = Topmudata.GetN()
 for i in range(nPointsTopmu):
     x = ROOT.Double(0)
@@ -57,6 +70,7 @@ TopmuST = file.Get(Topmu+"singlet")
 TopmuSMH = file.Get(Topmu+"smh")
 TopmuWjets = file.Get(Topmu+"wjets")
 
+tt_mc_in_topMu = file.Get(Topmu+"tt")
 tt_data_in_topMU = dataTopmu - (Topmudiboson + TopmuDYjets + TopmuQCD + TopmuST + TopmuSMH + TopmuWjets)
 
 
@@ -66,7 +80,7 @@ SR = "shapes_fit_b/SR/"
 
 #get the histogram inside shapes_fit_b/SR
 SRdata = file.Get(SR+"data")
-dataSR = TH1F("dataSR","",10,200,1000)
+dataSR = TH1F("dataSR","",nbins,edges)
 nPointsSR = SRdata.GetN()
 for i in range(nPointsSR):
     x = ROOT.Double(0)
@@ -82,31 +96,51 @@ SRsmh = file.Get(SR+"smh")
 SRwjets = file.Get(SR+"wjets")
 SRzjets = file.Get(SR+"zjets")
 
+tt_mc_in_SR = file.Get(SR+"tt")
 tt_data_in_SR = dataSR - (SRdiboson + SRqcd + SRst + SRsmh + SRwjets + SRzjets)
 
 
 #----------------------yield ratio--------------------------#
 
-'''
-nBin_tt_data_in_TopE = tt_data_in_topE.GetNbinsX()
-for i in range(nBin_tt_data_in_TopE):
-    tt_data_in_topE.GetBinContent()
-'''
+#**********DATA*************#
 
-yieldratioTope = tt_data_in_topE.Clone("yieldratioTope")
-yieldratioTopmu = tt_data_in_topMU.Clone("yieldratioTopmu")
-yieldratioTope.Divide(tt_data_in_SR)
-yieldratioTopmu.Divide(tt_data_in_SR)
+yieldratioTopeData = tt_data_in_topE.Clone("yieldratioTopeData")
+yieldratioTopmuData = tt_data_in_topMU.Clone("yieldratioTopmuData")
+yieldratioTopeData.Divide(tt_data_in_SR)#, 1.0, 1.0, "B")
+yieldratioTopmuData.Divide(tt_data_in_SR)#, 1.0, 1.0, "B")
+
+#***********MC************#
+
+yieldratioTopeMC = tt_mc_in_topE.Clone("yieldratioTopeMC")
+yieldratioTopmuMC = tt_mc_in_topMu.Clone("yieldratioTopmuMC")
+yieldratioTopeMC.Divide(tt_mc_in_SR)
+yieldratioTopmuMC.Divide(tt_mc_in_SR)
 
 
 #-----------------Plot the Top e yield ratio----------------#
 
 c1 = PlotTemplates.myCanvas()
-h_yieldratioTope = PlotTemplates.Save1DHisto(yieldratioTope, c1, "Recoil", "Yield Ratio (TopE/tt)")
-h_yieldratioTope.SetMarkerStyle(20)
-h_yieldratioTope.Draw("e1")
-leg1 = PlotTemplates.SetLegend(coordinate_=[.53,.7,.85,.87])
-leg1.AddEntry(yieldratioTope, "Data")
+
+h_yieldratioTopeData = PlotTemplates.Save1DHisto(yieldratioTopeData, c1, "Recoil", "Yield Ratio (TopE/tt)")
+h_yieldratioTopeData.SetMaximum(400.0)
+h_yieldratioTopeData.SetMinimum(-400.0)
+h_yieldratioTopeData.SetMarkerStyle(20)
+h_yieldratioTopeData.SetLineWidth(1)
+
+h_yieldratioTopeMC = PlotTemplates.Save1DHisto(yieldratioTopeMC, c1, "Recoil", "Yield Ratio (TopE/tt)")
+h_yieldratioTopeMC.SetMaximum(400.0)
+h_yieldratioTopeMC.SetMinimum(-400.0)
+#h_yieldratioTopeMC.SetMarkerStyle(20)
+#h_yieldratioTopeMC.SetMarkerColor(2)
+h_yieldratioTopeMC.SetLineColor(2)
+h_yieldratioTopeMC.SetLineWidth(1)
+
+h_yieldratioTopeMC.Draw("e1")
+h_yieldratioTopeData.Draw("e1same")
+
+leg1 = PlotTemplates.SetLegend(coordinate_=[.15,.7,.47,.87])
+leg1.AddEntry(h_yieldratioTopeMC, "MC")
+leg1.AddEntry(yieldratioTopeData, "Data")
 leg1.Draw()
 E1 = PlotTemplates.drawenergy(is2017 = True, data=True)
 for i in E1:
@@ -116,17 +150,33 @@ c1.cd()
 c1.Modified()
 c1.Update()
 c1.SaveAs("Tope_test.pdf")
-#c1.SaveAs("Tope_test.png")
+c1.SaveAs("Tope_test.png")
 
 
 #----------------Plot the Top Mu yield ratio----------------#
 
 c2 = PlotTemplates.myCanvas()
-h_yieldratioTopmu = PlotTemplates.Save1DHisto(yieldratioTopmu, c2, "Recoil", "Yield Ratio (TopMu/tt)")
-h_yieldratioTopmu.SetMarkerStyle(20)
-h_yieldratioTopmu.Draw("e1")
-leg2 = PlotTemplates.SetLegend(coordinate_=[.53,.7,.85,.87])
-leg2.AddEntry(yieldratioTopmu, "Data")
+
+h_yieldratioTopmuData = PlotTemplates.Save1DHisto(yieldratioTopmuData, c2, "Recoil", "Yield Ratio (TopMu/tt)")
+h_yieldratioTopmuData.SetMaximum(400.0)
+h_yieldratioTopmuData.SetMinimum(-400.0)
+h_yieldratioTopmuData.SetMarkerStyle(20)
+h_yieldratioTopmuData.SetLineWidth(1)
+
+h_yieldratioTopmuMC = PlotTemplates.Save1DHisto(yieldratioTopmuMC, c1, "Recoil", "Yield Ratio (TopMu/tt)")
+h_yieldratioTopmuMC.SetMaximum(400.0)
+h_yieldratioTopmuMC.SetMinimum(-400.0)
+#h_yieldratioTopmuMC.SetMarkerStyle(20)
+#h_yieldratioTopmuMC.SetMarkerColor(2)
+h_yieldratioTopmuMC.SetLineColor(2)
+h_yieldratioTopmuMC.SetLineWidth(1)
+
+h_yieldratioTopmuMC.Draw("e1")
+h_yieldratioTopmuData.Draw("e1same")
+
+leg2 = PlotTemplates.SetLegend(coordinate_=[.15,.7,.47,.87])
+leg2.AddEntry(h_yieldratioTopmuMC, "MC")
+leg2.AddEntry(yieldratioTopmuData, "Data")
 leg2.Draw()
 E2 = PlotTemplates.drawenergy(is2017 = True, data=True)
 for i in E2:
@@ -136,7 +186,7 @@ c2.cd()
 c2.Modified()
 c2.Update()
 c2.SaveAs("Topmu_test.pdf")
-#c2.SaveAs("Topmu_test.png")
+c2.SaveAs("Topmu_test.png")
 
 '''
 #------------------Get Each Histogram--------------------#
