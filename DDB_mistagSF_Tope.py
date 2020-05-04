@@ -7,6 +7,10 @@ import array as arr
 print "Top electron region"
 
 L = 41000.0 #/pb ; integrated luminosity
+nbins = 14
+totalmax = 1200.0
+ttmax = 600.0
+edges = arr.array('f', [0.0, 0.08, 0.16, 0.23, 0.30, 0.37, 0.44, 0.51, 0.58, 0.65, 0.72, 0.79, 0.86, 0.93, 1.0])
 
 #---------------------------------#
 #         TTtoSemileptonic        #
@@ -16,11 +20,11 @@ Top_path = "combined_crab_TTToSemiLeptonic_TuneCP5_PSweights_13TeV-powheg-pythia
 
 xsTop = 300.9498
 
-h_TopMatch = TH1F("h_TopMatch", "", 50, 0.0, 1.0)
-h_Wmatch = TH1F("h_Wmatch", "", 50, 0.0, 1.0)
-h_unmatch = TH1F("h_unmatch", "", 50, 0.0, 1.0)
-h_ttFailed = TH1F("h_ttFailed", "", 50, 0.0, 1.0)
-h_ttPassed = TH1F("h_ttPassed", "", 50, 0.0, 1.0)
+h_TopMatch = TH1F("h_TopMatch", "", nbins, edges)
+h_Wmatch = TH1F("h_Wmatch", "", nbins, edges)
+h_unmatch = TH1F("h_unmatch", "", nbins, edges)
+h_ttFailed = TH1F("h_ttFailed", "", nbins, edges)
+h_ttPassed = TH1F("h_ttPassed", "", nbins, edges)
 
 openTop = TFile(Top_path, "read")
 h_total_mcweight_Top = openTop.Get("h_total_mcweight")
@@ -72,8 +76,8 @@ WJets_files = ["combined_crab_WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-p
 
 xsWJets = [407.9, 57.48, 12.87, 5.366, 1.074, 0.008001]
 
-h_WJets = TH1F("h_WJets", "", 50, 0.0, 1.0)
-h_sumWJets = TH1F("h_sumWJets", "", 50, 0.0, 1.0)
+h_WJets = TH1F("h_WJets", "", nbins, edges)
+h_sumWJets = TH1F("h_sumWJets", "", nbins, edges)
 
 for k in range(len(WJets_files)):
     openWJets = TFile(WJets_files[k], "read")
@@ -104,8 +108,8 @@ Diboson_files = ["combined_crab_ZZ_TuneCP5_13TeV-pythia8.root","crab_WZ_TuneCP5_
 
 xsDiboson = [12.14, 27.6, 27.6]
 
-h_Diboson = TH1F("h_Diboson", "", 50, 0.0, 1.0)
-h_sumDiboson = TH1F("h_sumDiboson", "", 50, 0.0, 1.0)
+h_Diboson = TH1F("h_Diboson", "", nbins, edges)
+h_sumDiboson = TH1F("h_sumDiboson", "", nbins, edges)
 
 for k in range(len(Diboson_files)):
     openDiboson = TFile(Diboson_files[k], "read")
@@ -137,7 +141,7 @@ for k in range(len(Diboson_files)):
 
 SE_path = "combined_data_SE.root"
 
-h_SE = TH1F("h_SE", "", 50, 0.0, 1.0)
+h_SE = TH1F("h_SE", "", nbins, edges)
 
 openSE = TFile(SE_path, "read")
 h_total_mcweight_SE = openSE.Get("h_total_mcweight")
@@ -153,17 +157,17 @@ for i in range(EventsSE):
     if (SD_SE > 100.0) and (SD_SE < 150.0) and (dPhi_SE > 0.4):
         h_SE.Fill(CSV_SE)
 
-SubtractedData = TH1F("SubtractedData", "", 50, 0.0, 1.0)
+SubtractedData = TH1F("SubtractedData", "", nbins, edges)
 SubtractedData = h_SE - (h_sumWJets + h_sumDiboson)
 
 
 #------------Overlap histograms-------------#
 
-h_TopMatchFinal = TH1F("h_TopMatchFinal", "", 50, 0.0, 1.0)
-h_WmatchFinal = TH1F("h_WmatchFinal", "", 50, 0.0, 1.0)
-h_unmatchFinal = TH1F("h_unmatchFinal", "", 50, 0.0, 1.0)
-h_sumWJetsFinal = TH1F("h_sumWJetsFinal", "", 50, 0.0, 1.0)
-#h_sumDibosonFinal = TH1F("h_sumDibosonFinal", "", 50, 0.0, 1.0)
+h_TopMatchFinal = TH1F("h_TopMatchFinal", "", nbins, edges)
+h_WmatchFinal = TH1F("h_WmatchFinal", "", nbins, edges)
+h_unmatchFinal = TH1F("h_unmatchFinal", "", nbins, edges)
+h_sumWJetsFinal = TH1F("h_sumWJetsFinal", "", nbins, edges)
+#h_sumDibosonFinal = TH1F("h_sumDibosonFinal", "", nbins, edges)
 
 h_TopMatchFinal = h_TopMatch + h_Wmatch + h_unmatch + h_sumWJets + h_sumDiboson
 h_WmatchFinal = h_Wmatch + h_unmatch + h_sumWJets + h_sumDiboson
@@ -182,47 +186,53 @@ leg.SetTextSize(0.027)
 
 #lt1 = TLatex()
 
-h_TopMatchFinal.Rebin(2)
+#h_TopMatchFinal.Rebin(2)
 h_TopMatchFinal.SetFillColor(821)
 h_TopMatchFinal.SetLineColor(923)
 h_TopMatchFinal.GetXaxis().SetTitle("Double b score")
 h_TopMatchFinal.GetYaxis().SetTitle("Events/Bin")
+h_TopMatchFinal.SetMaximum(totalmax)
 leg.AddEntry(h_TopMatchFinal, "Top (mtch.) (32.37%)", "f")
 
-h_WmatchFinal.Rebin(2)
+#h_WmatchFinal.Rebin(2)
 h_WmatchFinal.SetFillColor(822)
 h_WmatchFinal.SetLineColor(923)
 h_WmatchFinal.GetXaxis().SetTitle("Double b score")
 h_WmatchFinal.GetYaxis().SetTitle("Events/Bin")
+h_WmatchFinal.SetMaximum(totalmax)
 leg.AddEntry(h_WmatchFinal, "Top (W-mtch.) (9.63%)","f")
 
-h_unmatchFinal.Rebin(2)
+#h_unmatchFinal.Rebin(2)
 h_unmatchFinal.SetFillColor(813)
 h_unmatchFinal.SetLineColor(923)
 h_unmatchFinal.GetXaxis().SetTitle("Double b score")
 h_unmatchFinal.GetYaxis().SetTitle("Events/Bin")
+h_unmatchFinal.SetMaximum(totalmax)
 leg.AddEntry(h_unmatchFinal, "Top (unmtch.) (58.0%)","f")
 
-h_sumWJetsFinal.Rebin(2)
+#h_sumWJetsFinal.Rebin(2)
 h_sumWJetsFinal.SetFillColor(854)
 h_sumWJetsFinal.SetLineColor(923)
 h_sumWJetsFinal.GetXaxis().SetTitle("Double b score")
 h_sumWJetsFinal.GetYaxis().SetTitle("Events/Bin")
+h_sumWJetsFinal.SetMaximum(totalmax)
 leg.AddEntry(h_sumWJetsFinal, "W+Jets","f")
 
-h_sumDiboson.Rebin(2)
+#h_sumDiboson.Rebin(2)
 h_sumDiboson.SetFillColor(627)
 h_sumDiboson.SetLineColor(923)
 h_sumDiboson.GetXaxis().SetTitle("Double b score")
 h_sumDiboson.GetYaxis().SetTitle("Events/Bin")
+h_sumDiboson.SetMaximum(totalmax)
 leg.AddEntry(h_sumDiboson, "Diboson","f")
 
-h_SE.Rebin(2)
+#h_SE.Rebin(2)
 h_SE.SetLineColor(1)
 h_SE.SetMarkerStyle(20)
 h_SE.SetMarkerSize(1.5)
 h_SE.GetXaxis().SetTitle("Double b score")
 h_SE.GetYaxis().SetTitle("Events/Bin")
+h_SE.SetMaximum(totalmax)
 leg.AddEntry(h_SE, "Data", "lep")
 
 #-------Draw Histogram in c1---------#
@@ -260,23 +270,23 @@ leg2.SetTextSize(0.027)
 
 lt2 = TLatex()
 
-h_ttFailed.Rebin(2)
+#h_ttFailed.Rebin(2)
 h_ttFailed.SetFillColor(821)
 h_ttFailed.SetLineColor(922)
 h_ttFailed.GetXaxis().SetTitle("Double b score")
 h_ttFailed.GetYaxis().SetTitle("Events/Bin")
-h_ttFailed.SetMaximum(350.0)
+h_ttFailed.SetMaximum(ttmax)
 leg2.AddEntry(h_ttFailed, "t#bar{t}", "f")
 
-h_ttPassed.Rebin(2)
+#h_ttPassed.Rebin(2)
 h_ttPassed.SetFillColor(622)
 h_ttPassed.SetLineColor(922)
 h_ttPassed.GetXaxis().SetTitle("Double b score")
 h_ttPassed.GetYaxis().SetTitle("Events/Bin")
-h_ttPassed.SetMaximum(350.0)
+h_ttPassed.SetMaximum(ttmax)
 leg2.AddEntry(h_ttPassed, "t#bar{t} mistag (17.79%)", "f")
 
-SubtractedData.Rebin(2)
+#SubtractedData.Rebin(2)
 SubtractedData.SetLineColor(1)
 SubtractedData.SetMarkerStyle(20)
 SubtractedData.SetMarkerSize(1.5)
@@ -316,7 +326,7 @@ leg3.SetTextSize(0.027)
 
 lt3 = TLatex()
 
-h_tt.Rebin(2)
+#h_tt.Rebin(2)
 h_tt.SetFillColor(821)
 h_tt.SetLineColor(922)
 h_tt.GetXaxis().SetTitle("Double b score")
