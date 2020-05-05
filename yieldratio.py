@@ -25,7 +25,7 @@ TopeDYjets = file.Get(Tope+"dyjets")
 for i in range(nbins):
     low = TopeDYjets.GetXaxis().GetBinLowEdge(i+1)
     edges.append(low)
-#up = TopeDYjets.GetXaxis().GetBinLowEdge(nbins)
+#up = TopeDYjets.GetXaxis().GetBinUpEdge(nbins)
 edges.append(1000.0)
 print edges
 
