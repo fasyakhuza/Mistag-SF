@@ -10,7 +10,8 @@ import array as arr
 
 nbins = 4
 edges = arr.array('f')
-
+min = 0.0
+max = 10.0
 file = TFile("fitDiagnostics.root")
 
 
@@ -34,10 +35,11 @@ nPointsTope = Topedata.GetN()
 for i in range(nPointsTope):
     x = ROOT.Double(0)
     y = ROOT.Double(0)
-    Topedata.GetPoint(i+1, x, y)
+    Topedata.GetPoint(i, x, y)
     k = dataTope.FindFixBin(x)
+    print "y", y
     dataTope.SetBinContent(k, y)
-    dataTope.SetBinError(i+1, Topedata.GetErrorY(i+1))
+    dataTope.SetBinError(i, Topedata.GetErrorY(i))
 Topediboson = file.Get(Tope+"diboson")
 
 TopeQCD = file.Get(Tope+"qcd")
@@ -59,10 +61,10 @@ nPointsTopmu = Topmudata.GetN()
 for i in range(nPointsTopmu):
     x = ROOT.Double(0)
     y = ROOT.Double(0)
-    Topmudata.GetPoint(i+1, x, y)
+    Topmudata.GetPoint(i, x, y)
     k = dataTopmu.FindFixBin(x)
     dataTopmu.SetBinContent(k,y)
-    dataTopmu.SetBinError(i+1, Topmudata.GetErrorY(i+1))
+    dataTopmu.SetBinError(i, Topmudata.GetErrorY(i))
 Topmudiboson = file.Get(Topmu+"diboson")
 TopmuDYjets = file.Get(Topmu+"dyjets")
 TopmuQCD = file.Get(Topmu+"qcd")
@@ -85,10 +87,10 @@ nPointsSR = SRdata.GetN()
 for i in range(nPointsSR):
     x = ROOT.Double(0)
     y = ROOT.Double(0)
-    SRdata.GetPoint(i+1, x, y)
+    SRdata.GetPoint(i, x, y)
     k = dataSR.FindFixBin(x)
     dataSR.SetBinContent(k,y)
-    dataSR.SetBinError(i+1, SRdata.GetErrorY(i+1))
+    dataSR.SetBinError(i, SRdata.GetErrorY(i))
 SRdiboson = file.Get(SR+"diboson")
 SRqcd = file.Get(SR+"qcd")
 SRst = file.Get(SR+"singlet")
@@ -109,6 +111,9 @@ yieldratioTopmuData = tt_data_in_topMU.Clone("yieldratioTopmuData")
 yieldratioTopeData.Divide(tt_data_in_SR)#, 1.0, 1.0, "B")
 yieldratioTopmuData.Divide(tt_data_in_SR)#, 1.0, 1.0, "B")
 
+print "Top e data", yieldratioTopeData.GetBinContent(4)
+print "Top mu data", yieldratioTopmuData.GetBinContent(4)
+
 #***********MC************#
 
 yieldratioTopeMC = tt_mc_in_topE.Clone("yieldratioTopeMC")
@@ -116,20 +121,22 @@ yieldratioTopmuMC = tt_mc_in_topMu.Clone("yieldratioTopmuMC")
 yieldratioTopeMC.Divide(tt_mc_in_SR)
 yieldratioTopmuMC.Divide(tt_mc_in_SR)
 
+print "Top e MC", yieldratioTopeMC.GetBinContent(4)
+print "Top mu MC", yieldratioTopmuMC.GetBinContent(4)
 
 #-----------------Plot the Top e yield ratio----------------#
 
 c1 = PlotTemplates.myCanvas()
 
 h_yieldratioTopeData = PlotTemplates.Save1DHisto(yieldratioTopeData, c1, "Recoil", "Yield Ratio (TopE/tt)")
-h_yieldratioTopeData.SetMaximum(400.0)
-h_yieldratioTopeData.SetMinimum(-400.0)
+h_yieldratioTopeData.SetMaximum(max)
+h_yieldratioTopeData.SetMinimum(min)
 h_yieldratioTopeData.SetMarkerStyle(20)
 h_yieldratioTopeData.SetLineWidth(1)
 
 h_yieldratioTopeMC = PlotTemplates.Save1DHisto(yieldratioTopeMC, c1, "Recoil", "Yield Ratio (TopE/tt)")
-h_yieldratioTopeMC.SetMaximum(400.0)
-h_yieldratioTopeMC.SetMinimum(-400.0)
+h_yieldratioTopeMC.SetMaximum(max)
+h_yieldratioTopeMC.SetMinimum(min)
 #h_yieldratioTopeMC.SetMarkerStyle(20)
 #h_yieldratioTopeMC.SetMarkerColor(2)
 h_yieldratioTopeMC.SetLineColor(2)
@@ -158,14 +165,14 @@ c1.SaveAs("Tope_test.png")
 c2 = PlotTemplates.myCanvas()
 
 h_yieldratioTopmuData = PlotTemplates.Save1DHisto(yieldratioTopmuData, c2, "Recoil", "Yield Ratio (TopMu/tt)")
-h_yieldratioTopmuData.SetMaximum(400.0)
-h_yieldratioTopmuData.SetMinimum(-400.0)
+h_yieldratioTopmuData.SetMaximum(max)
+h_yieldratioTopmuData.SetMinimum(min)
 h_yieldratioTopmuData.SetMarkerStyle(20)
 h_yieldratioTopmuData.SetLineWidth(1)
 
 h_yieldratioTopmuMC = PlotTemplates.Save1DHisto(yieldratioTopmuMC, c1, "Recoil", "Yield Ratio (TopMu/tt)")
-h_yieldratioTopmuMC.SetMaximum(400.0)
-h_yieldratioTopmuMC.SetMinimum(-400.0)
+h_yieldratioTopmuMC.SetMaximum(max)
+h_yieldratioTopmuMC.SetMinimum(min)
 #h_yieldratioTopmuMC.SetMarkerStyle(20)
 #h_yieldratioTopmuMC.SetMarkerColor(2)
 h_yieldratioTopmuMC.SetLineColor(2)
