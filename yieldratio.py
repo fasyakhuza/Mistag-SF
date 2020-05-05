@@ -39,7 +39,7 @@ for i in range(nPointsTope):
     k = dataTope.FindFixBin(x)
     print "y", y
     dataTope.SetBinContent(k, y)
-    dataTope.SetBinError(i, Topedata.GetErrorY(i))
+    dataTope.SetBinError(i+1, Topedata.GetErrorY(i))
 Topediboson = file.Get(Tope+"diboson")
 
 TopeQCD = file.Get(Tope+"qcd")
@@ -64,7 +64,7 @@ for i in range(nPointsTopmu):
     Topmudata.GetPoint(i, x, y)
     k = dataTopmu.FindFixBin(x)
     dataTopmu.SetBinContent(k,y)
-    dataTopmu.SetBinError(i, Topmudata.GetErrorY(i))
+    dataTopmu.SetBinError(i+1, Topmudata.GetErrorY(i))
 Topmudiboson = file.Get(Topmu+"diboson")
 TopmuDYjets = file.Get(Topmu+"dyjets")
 TopmuQCD = file.Get(Topmu+"qcd")
@@ -90,7 +90,7 @@ for i in range(nPointsSR):
     SRdata.GetPoint(i, x, y)
     k = dataSR.FindFixBin(x)
     dataSR.SetBinContent(k,y)
-    dataSR.SetBinError(i, SRdata.GetErrorY(i))
+    dataSR.SetBinError(i+1, SRdata.GetErrorY(i))
 SRdiboson = file.Get(SR+"diboson")
 SRqcd = file.Get(SR+"qcd")
 SRst = file.Get(SR+"singlet")
@@ -195,16 +195,16 @@ c2.Update()
 c2.SaveAs("Topmu_test.pdf")
 c2.SaveAs("Topmu_test.png")
 
-'''
+
 #------------------Get Each Histogram--------------------#
 
 c3 = PlotTemplates.myCanvas()
-h_tt_data_in_topE = PlotTemplates.Save1DHisto(tt_data_in_topE, c3, "Recoil", "Events")
+h_data_in_topE = PlotTemplates.Save1DHisto(dataTope, c3, "Recoil", "Events")
 c3.cd()
 c3.Modified()
 c3.Update()
-c3.SaveAs("tt_data_in_topE.pdf")
-
+c3.SaveAs("data_in_topE.pdf")
+'''
 c4 = PlotTemplates.myCanvas()
 h_tt_data_in_topMu = PlotTemplates.Save1DHisto(tt_data_in_topMU, c4, "Recoil", "Events")
 c4.cd()
