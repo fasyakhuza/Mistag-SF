@@ -111,7 +111,7 @@ for i in range(Events_ttHad):
     dPhi_ttHad = getattr(tree_ttHad, 'min_dPhi')
     if (SD_ttHad > 100.0) and (SD_ttHad < 150.0) and (dPhi_ttHad > 0.4):
         h_ttHad.Fill(CSV_ttHad)
-
+print "ttHad", h_ttHad.Integral()
 h_ttHad = h_ttHad*(L*xs_ttHad/totalEvents_ttHad)
 
 
