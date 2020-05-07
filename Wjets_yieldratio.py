@@ -15,7 +15,7 @@ max = 9.0
 file = TFile("fitDiagnostics.root")
 
 
-#------------------------TOPE------------------------------#
+#------------------------WE------------------------------#
 
 We = "shapes_fit_b/WE/"
 
@@ -56,7 +56,7 @@ for i in range(nbins):
 
 Wjets_data_in_WE = dataWe - (Wediboson + WeDYjets + WeQCD + WeST + WeSMH + WeTT)
 
-#-----------------------TOPMU-----------------------------#
+#-----------------------WMU-----------------------------#
 
 Wmu = "shapes_fit_b/WMU/"
 
@@ -131,7 +131,7 @@ yieldratioWmuMC.Divide(SRwjets)
 #print "W e MC", yieldratioWeMC.GetBinContent(4)
 #print "W mu MC", yieldratioWmuMC.GetBinContent(4)
 
-#-----------------Plot the Top e yield ratio----------------#
+#-----------------Plot the W e yield ratio----------------#
 
 c1 = PlotTemplates.myCanvas()
 
@@ -167,7 +167,7 @@ c1.SaveAs("We_test.pdf")
 c1.SaveAs("We_test.png")
 
 
-#----------------Plot the Top Mu yield ratio----------------#
+#----------------Plot the W Mu yield ratio----------------#
 
 c2 = PlotTemplates.myCanvas()
 
@@ -200,4 +200,4 @@ c2.cd()
 #c2.Modified()
 #c2.Update()
 c2.SaveAs("Wmu_test.pdf")
-c2.SaveAs("Topmu_test.png")
+c2.SaveAs("Wmu_test.png")
