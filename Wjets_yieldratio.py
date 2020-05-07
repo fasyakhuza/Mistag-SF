@@ -161,8 +161,8 @@ for i in E1:
     i.Draw()
 
 c1.cd()
-c1.Modified()
-c1.Update()
+#c1.Modified()
+#c1.Update()
 c1.SaveAs("We_test.pdf")
 c1.SaveAs("We_test.png")
 
@@ -197,7 +197,7 @@ for i in E2:
     i.Draw()
 
 c2.cd()
-c2.Modified()
-c2.Update()
+#c2.Modified()
+#c2.Update()
 c2.SaveAs("Wmu_test.pdf")
 c2.SaveAs("Topmu_test.png")
