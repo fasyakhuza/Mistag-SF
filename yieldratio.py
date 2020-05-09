@@ -10,8 +10,6 @@ import array as arr
 
 nbins = 4
 edges = arr.array('f')
-min = 0.0
-max = 10.0
 file = TFile("fitDiagnostics.root")
 
 
@@ -27,7 +25,6 @@ for i in range(nbins):
     edges.append(low)
 up = TopeDYjets.GetXaxis().GetBinUpEdge(nbins)
 edges.append(up)
-print edges
 
 Topedata = file.Get(Tope+"data")
 dataTope = TH1F("dataTope","",nbins,edges)
@@ -37,20 +34,20 @@ for i in range(nPointsTope):
     y = ROOT.Double(0)
     Topedata.GetPoint(i, x, y)
     k = dataTope.FindFixBin(x)
-    print "y", y
     dataTope.SetBinContent(k, y)
     dataTope.SetBinError(i+1, Topedata.GetErrorY(i))
-Topediboson = file.Get(Tope+"diboson")
 
+Topediboson = file.Get(Tope+"diboson")
 TopeQCD = file.Get(Tope+"qcd")
 TopeST = file.Get(Tope+"singlet")
 TopeSMH = file.Get(Tope+"smh")
 TopeWjets = file.Get(Tope+"wjets")
+TopeTT = file.Get(Tope+"tt")
 
-tt_mc_in_topE = file.Get(Tope+"tt")
 tt_data_in_topE = dataTope - (Topediboson + TopeDYjets + TopeQCD + TopeST + TopeSMH + TopeWjets)
 
-#-----------------------TOPMU-----------------------------#
+
+#------------------------TOPMU-----------------------------#
 
 Topmu = "shapes_fit_b/TOPMU/"
 
@@ -71,10 +68,129 @@ TopmuQCD = file.Get(Topmu+"qcd")
 TopmuST = file.Get(Topmu+"singlet")
 TopmuSMH = file.Get(Topmu+"smh")
 TopmuWjets = file.Get(Topmu+"wjets")
+TopmuTT = file.Get(Topmu+"tt")
 
-tt_mc_in_topMu = file.Get(Topmu+"tt")
 tt_data_in_topMU = dataTopmu - (Topmudiboson + TopmuDYjets + TopmuQCD + TopmuST + TopmuSMH + TopmuWjets)
 
+
+#------------------------WE------------------------------#
+
+We = "shapes_fit_b/WE/"
+
+#get the histogram inside shapes_fit_b/WE
+WeDYjets = file.Get(We+"dyjets")
+for i in range(nbins):
+    low = WeDYjets.GetXaxis().GetBinLowEdge(i+1)
+    edges.append(low)
+up = WeDYjets.GetXaxis().GetBinUpEdge(nbins)
+edges.append(up)
+
+Wedata = file.Get(We+"data")
+dataWe = TH1F("dataWe","",nbins,edges)
+nPointsWe = Wedata.GetN()
+for i in range(nPointsWe):
+    x = ROOT.Double(0)
+    y = ROOT.Double(0)
+    Wedata.GetPoint(i, x, y)
+    k = dataWe.FindFixBin(x)
+    dataWe.SetBinContent(k, y)
+    dataWe.SetBinError(i+1, Wedata.GetErrorY(i))
+
+Wediboson = file.Get(We+"diboson")
+WeQCD = file.Get(We+"qcd")
+WeST = file.Get(We+"singlet")
+WeSMH = file.Get(We+"smh")
+WeTT = file.Get(We+"tt")
+WeWjets = file.Get(We+"wjets")
+
+Wjets_data_in_WE = dataWe - (Wediboson + WeDYjets + WeQCD + WeST + WeSMH + WeTT)
+
+#-----------------------WMU-----------------------------#
+
+Wmu = "shapes_fit_b/WMU/"
+
+#get the histogram inside shapes_fit_b/WMU
+Wmudata = file.Get(Wmu+"data")
+dataWmu = TH1F("dataWmu","",nbins,edges)
+nPointsWmu = Wmudata.GetN()
+for i in range(nPointsWmu):
+    x = ROOT.Double(0)
+    y = ROOT.Double(0)
+    Wmudata.GetPoint(i, x, y)
+    k = dataWmu.FindFixBin(x)
+    dataWmu.SetBinContent(k,y)
+    dataWmu.SetBinError(i+1, Wmudata.GetErrorY(i))
+Wmudiboson = file.Get(Wmu+"diboson")
+WmuDYjets = file.Get(Wmu+"dyjets")
+WmuQCD = file.Get(Wmu+"qcd")
+WmuST = file.Get(Wmu+"singlet")
+WmuSMH = file.Get(Wmu+"smh")
+WmuTT = file.Get(Wmu+"tt")
+WmuWjets = file.Get(Wmu+"wjets")
+
+
+Wjets_data_in_WMU = dataWmu - (Wmudiboson + WmuDYjets + WmuQCD + WmuST + WmuSMH + WmuTT)
+
+
+#------------------------ZEE------------------------------#
+
+Zee = "shapes_fit_b/ZEE/"
+
+#get the histogram inside shapes_fit_b/ZEE
+ZeeDYjets = file.Get(Zee+"dyjets")
+for i in range(nbins):
+    low = ZeeDYjets.GetXaxis().GetBinLowEdge(i+1)
+    edges.append(low)
+up = ZeeDYjets.GetXaxis().GetBinUpEdge(nbins)
+edges.append(up)
+
+Zeedata = file.Get(Zee+"data")
+dataZee = TH1F("dataZee","",nbins,edges)
+nPointsZee = Zeedata.GetN()
+for i in range(nPointsZee):
+    x = ROOT.Double(0)
+    y = ROOT.Double(0)
+    Zeedata.GetPoint(i, x, y)
+    k = dataZee.FindFixBin(x)
+    dataZee.SetBinContent(k, y)
+    dataZee.SetBinError(i+1, Zeedata.GetErrorY(i))
+
+Zeediboson = file.Get(Zee+"diboson")
+ZeeST = file.Get(Zee+"singlet")
+ZeeSMH = file.Get(Zee+"smh")
+ZeeTT = file.Get(Zee+"tt")
+
+'''
+for i in range(nbins):
+    ErrorWjet = WeWjets.GetBinError(i+1)
+    print "W+jets error_",i+1, ErrorWjet
+'''
+
+DYjets_data_in_ZEE = dataZee - (Zeediboson + ZeeST + ZeeSMH + ZeeTT)
+
+#-----------------------ZMUMU-----------------------------#
+
+Zmumu = "shapes_fit_b/ZMUMU/"
+
+#get the histogram inside shapes_fit_b/ZMUMU
+Zmumudata = file.Get(Zmumu+"data")
+dataZmumu = TH1F("dataZmumu","",nbins,edges)
+nPointsZmumu = Zmumudata.GetN()
+for i in range(nPointsZmumu):
+    x = ROOT.Double(0)
+    y = ROOT.Double(0)
+    Zmumudata.GetPoint(i, x, y)
+    k = dataZmumu.FindFixBin(x)
+    dataZmumu.SetBinContent(k,y)
+    dataZmumu.SetBinError(i+1, Zmumudata.GetErrorY(i))
+Zmumudiboson = file.Get(Zmumu+"diboson")
+ZmumuST = file.Get(Zmumu+"singlet")
+ZmumuSMH = file.Get(Zmumu+"smh")
+ZmumuTT = file.Get(Zmumu+"tt")
+ZmumuDYjets = file.Get(Zmumu+"dyjets")
+
+
+DYjets_data_in_ZMUMU = dataZmumu - (Zmumudiboson + ZmumuST + ZmumuSMH + ZmumuTT)
 
 #----------------------SR-----------------------------------#
 
@@ -97,55 +213,91 @@ SRst = file.Get(SR+"singlet")
 SRsmh = file.Get(SR+"smh")
 SRwjets = file.Get(SR+"wjets")
 SRzjets = file.Get(SR+"zjets")
+SRtt = file.Get(SR+"tt")
 
-tt_mc_in_SR = file.Get(SR+"tt")
 tt_data_in_SR = dataSR - (SRdiboson + SRqcd + SRst + SRsmh + SRwjets + SRzjets)
-
+Wjets_data_in_SR = dataSR - (SRdiboson + SRqcd + SRst + SRsmh + SRzjets +SRtt)
+Zjets_data_in_SR = dataSR - (SRdiboson + SRqcd + SRst + SRsmh + SRwjets + SRtt)
 
 #----------------------yield ratio--------------------------#
 
-#**********DATA*************#
+#*************TOP DATA****************#
 
 yieldratioTopeData = tt_data_in_topE.Clone("yieldratioTopeData")
 yieldratioTopmuData = tt_data_in_topMU.Clone("yieldratioTopmuData")
-yieldratioTopeData.Divide(tt_data_in_SR)#, 1.0, 1.0, "B")
-yieldratioTopmuData.Divide(tt_data_in_SR)#, 1.0, 1.0, "B")
+yieldratioTopeData.Divide(tt_data_in_SR)
+yieldratioTopmuData.Divide(tt_data_in_SR)
 
-print "Top e data", yieldratioTopeData.GetBinContent(4)
-print "Top mu data", yieldratioTopmuData.GetBinContent(4)
 
-#***********MC************#
+#*************TOP MC****************#
 
-yieldratioTopeMC = tt_mc_in_topE.Clone("yieldratioTopeMC")
-yieldratioTopmuMC = tt_mc_in_topMu.Clone("yieldratioTopmuMC")
-yieldratioTopeMC.Divide(tt_mc_in_SR)
-yieldratioTopmuMC.Divide(tt_mc_in_SR)
+yieldratioTopeMC = TopeTT.Clone("yieldratioTopeMC")
+yieldratioTopmuMC = TopmuTT.Clone("yieldratioTopmuMC")
+yieldratioTopeMC.Divide(SRtt)
+yieldratioTopmuMC.Divide(SRtt)
 
-print "Top e MC", yieldratioTopeMC.GetBinContent(4)
-print "Top mu MC", yieldratioTopmuMC.GetBinContent(4)
 
-#-----------------Plot the Top e yield ratio----------------#
+#***********WJETS DATA*************#
+
+yieldratioWeData = Wjets_data_in_WE.Clone("yieldratioWeData")
+yieldratioWmuData = Wjets_data_in_WMU.Clone("yieldratioWmuData")
+yieldratioWeData.Divide(Wjets_data_in_SR)#, 1.0, 1.0, "B")
+yieldratioWmuData.Divide(Wjets_data_in_SR)#, 1.0, 1.0, "B")
+
+#************WJETS MC*************#
+
+yieldratioWeMC = WeWjets.Clone("yieldratioWeMC")
+yieldratioWmuMC = WmuWjets.Clone("yieldratioWmuMC")
+yieldratioWeMC.Divide(SRwjets)
+yieldratioWmuMC.Divide(SRwjets)
+
+#**********ZJETS DATA*************#
+
+yieldratioZeeData = DYjets_data_in_ZEE.Clone("yieldratioZeeData")
+yieldratioZmumuData = DYjets_data_in_ZMUMU.Clone("yieldratioZmumuData")
+yieldratioZeeData.Divide(Zjets_data_in_SR)
+yieldratioZmumuData.Divide(Zjets_data_in_SR)
+
+#***********ZJETS MC************#
+
+yieldratioZeeMC = ZeeDYjets.Clone("yieldratioZeeMC")
+yieldratioZmumuMC = ZmumuDYjets.Clone("yieldratioZmumuMC")
+yieldratioZeeMC.Divide(SRzjets)
+yieldratioZmumuMC.Divide(SRzjets)
+
+
+
+#-----------------Plot the yield ratio----------------#
+
+yminTop = 0.0
+ymaxTop = 10.0
+yminW = -6.0
+ymaxW = 9.0
+yminZ = 0.0
+ymaxZ = 18.0
+
+#************* TOPE ****************#
 
 c1 = PlotTemplates.myCanvas()
 
 h_yieldratioTopeData = PlotTemplates.Save1DHisto(yieldratioTopeData, c1, "Recoil", "Yield Ratio (TopE/tt)")
-h_yieldratioTopeData.SetMaximum(max)
-h_yieldratioTopeData.SetMinimum(min)
+h_yieldratioTopeData.SetMaximum(ymaxTop)
+h_yieldratioTopeData.SetMinimum(yminTop)
 h_yieldratioTopeData.SetMarkerStyle(20)
-h_yieldratioTopeData.SetLineWidth(1)
+h_yieldratioTopeData.SetLineWidth(2)
 
 h_yieldratioTopeMC = PlotTemplates.Save1DHisto(yieldratioTopeMC, c1, "Recoil", "Yield Ratio (TopE/tt)")
-h_yieldratioTopeMC.SetMaximum(max)
-h_yieldratioTopeMC.SetMinimum(min)
-#h_yieldratioTopeMC.SetMarkerStyle(20)
+h_yieldratioTopeMC.SetMaximum(ymaxTop)
+h_yieldratioTopeMC.SetMinimum(yminTop)
+#h_yieldratioTopeMC.SetMarkerStyle(21)
 #h_yieldratioTopeMC.SetMarkerColor(2)
 h_yieldratioTopeMC.SetLineColor(2)
-h_yieldratioTopeMC.SetLineWidth(1)
+h_yieldratioTopeMC.SetLineWidth(3)
 
 h_yieldratioTopeMC.Draw("e1")
 h_yieldratioTopeData.Draw("e1same")
 
-leg1 = PlotTemplates.SetLegend(coordinate_=[.15,.7,.47,.87])
+leg1 = PlotTemplates.SetLegend()
 leg1.AddEntry(h_yieldratioTopeMC, "MC")
 leg1.AddEntry(yieldratioTopeData, "Data")
 leg1.Draw()
@@ -153,35 +305,31 @@ E1 = PlotTemplates.drawenergy(is2017 = True, data=True)
 for i in E1:
     i.Draw()
 
-c1.cd()
-c1.Modified()
-c1.Update()
-c1.SaveAs("Tope_test.pdf")
-c1.SaveAs("Tope_test.png")
+c1.SaveAs("Tope_YieldRatio.pdf")
 
 
-#----------------Plot the Top Mu yield ratio----------------#
+#************* TOPMU ****************#
 
 c2 = PlotTemplates.myCanvas()
 
 h_yieldratioTopmuData = PlotTemplates.Save1DHisto(yieldratioTopmuData, c2, "Recoil", "Yield Ratio (TopMu/tt)")
-h_yieldratioTopmuData.SetMaximum(max)
-h_yieldratioTopmuData.SetMinimum(min)
+h_yieldratioTopmuData.SetMaximum(ymaxTop)
+h_yieldratioTopmuData.SetMinimum(yminTop)
 h_yieldratioTopmuData.SetMarkerStyle(20)
-h_yieldratioTopmuData.SetLineWidth(1)
+h_yieldratioTopmuData.SetLineWidth(2)
 
-h_yieldratioTopmuMC = PlotTemplates.Save1DHisto(yieldratioTopmuMC, c1, "Recoil", "Yield Ratio (TopMu/tt)")
-h_yieldratioTopmuMC.SetMaximum(max)
-h_yieldratioTopmuMC.SetMinimum(min)
-#h_yieldratioTopmuMC.SetMarkerStyle(20)
+h_yieldratioTopmuMC = PlotTemplates.Save1DHisto(yieldratioTopmuMC, c2, "Recoil", "Yield Ratio (TopMu/tt)")
+h_yieldratioTopmuMC.SetMaximum(ymaxTop)
+h_yieldratioTopmuMC.SetMinimum(yminTop)
+#h_yieldratioTopmuMC.SetMarkerStyle(21)
 #h_yieldratioTopmuMC.SetMarkerColor(2)
 h_yieldratioTopmuMC.SetLineColor(2)
-h_yieldratioTopmuMC.SetLineWidth(1)
+h_yieldratioTopmuMC.SetLineWidth(3)
 
 h_yieldratioTopmuMC.Draw("e1")
 h_yieldratioTopmuData.Draw("e1same")
 
-leg2 = PlotTemplates.SetLegend(coordinate_=[.15,.7,.47,.87])
+leg2 = PlotTemplates.SetLegend()
 leg2.AddEntry(h_yieldratioTopmuMC, "MC")
 leg2.AddEntry(yieldratioTopmuData, "Data")
 leg2.Draw()
@@ -189,40 +337,132 @@ E2 = PlotTemplates.drawenergy(is2017 = True, data=True)
 for i in E2:
     i.Draw()
 
-c2.cd()
-c2.Modified()
-c2.Update()
-c2.SaveAs("Topmu_test.pdf")
-c2.SaveAs("Topmu_test.png")
+c2.SaveAs("Topmu_YieldRatio.pdf")
 
 
-#------------------Get Each Histogram--------------------#
+#************* WE ****************#
 
 c3 = PlotTemplates.myCanvas()
-h_data_in_topE = PlotTemplates.Save1DHisto(dataTope, c3, "Recoil", "Events")
-c3.cd()
-c3.Modified()
-c3.Update()
-c3.SaveAs("data_in_topE.pdf")
-'''
+
+h_yieldratioWeData = PlotTemplates.Save1DHisto(yieldratioWeData, c3, "Recoil", "Yield Ratio (We/WJets)")
+h_yieldratioWeData.SetMaximum(ymaxW)
+h_yieldratioWeData.SetMinimum(yminW)
+h_yieldratioWeData.SetMarkerStyle(20)
+h_yieldratioWeData.SetLineWidth(2)
+
+h_yieldratioWeMC = PlotTemplates.Save1DHisto(yieldratioWeMC, c3, "Recoil", "Yield Ratio (We/WJets)")
+h_yieldratioWeMC.SetMaximum(ymaxW)
+h_yieldratioWeMC.SetMinimum(yminW)
+#h_yieldratioWeMC.SetMarkerStyle(21)
+#h_yieldratioWeMC.SetMarkerColor(2)
+h_yieldratioWeMC.SetLineColor(2)
+h_yieldratioWeMC.SetLineWidth(3)
+
+h_yieldratioWeMC.Draw("e1")
+h_yieldratioWeData.Draw("e1same")
+
+leg3 = PlotTemplates.SetLegend()
+leg3.AddEntry(h_yieldratioWeMC, "MC")
+leg3.AddEntry(yieldratioWeData, "Data")
+leg3.Draw()
+E3 = PlotTemplates.drawenergy(is2017 = True, data=True)
+for i in E3:
+    i.Draw()
+
+c3.SaveAs("We_YieldRatio.pdf")
+
+
+#************* WMU ****************#
+
 c4 = PlotTemplates.myCanvas()
-h_tt_data_in_topMu = PlotTemplates.Save1DHisto(tt_data_in_topMU, c4, "Recoil", "Events")
-c4.cd()
-c4.Modified()
-c4.Update()
-c4.SaveAs("tt_data_in_topMu.pdf")
+
+h_yieldratioWmuData = PlotTemplates.Save1DHisto(yieldratioWmuData, c4, "Recoil", "Yield Ratio (Wmu/WJets)")
+h_yieldratioWmuData.SetMaximum(ymaxW)
+h_yieldratioWmuData.SetMinimum(yminW)
+h_yieldratioWmuData.SetMarkerStyle(20)
+h_yieldratioWmuData.SetLineWidth(2)
+
+h_yieldratioWmuMC = PlotTemplates.Save1DHisto(yieldratioWmuMC, c4, "Recoil", "Yield Ratio (Wmu/WJets)")
+h_yieldratioWmuMC.SetMaximum(ymaxW)
+h_yieldratioWmuMC.SetMinimum(yminW)
+#h_yieldratioWmuMC.SetMarkerStyle(21)
+#h_yieldratioWmuMC.SetMarkerColor(2)
+h_yieldratioWmuMC.SetLineColor(2)
+h_yieldratioWmuMC.SetLineWidth(3)
+
+h_yieldratioWmuMC.Draw("e1")
+h_yieldratioWmuData.Draw("e1same")
+
+leg4 = PlotTemplates.SetLegend()
+leg4.AddEntry(h_yieldratioWmuMC, "MC")
+leg4.AddEntry(yieldratioWmuData, "Data")
+leg4.Draw()
+E4 = PlotTemplates.drawenergy(is2017 = True, data=True)
+for i in E4:
+    i.Draw()
+
+c4.SaveAs("Wmu_YieldRatio.pdf")
+
+
+#************* ZEE ****************#
 
 c5 = PlotTemplates.myCanvas()
-h_tt_data_in_SR = PlotTemplates.Save1DHisto(tt_data_in_SR, c5, "Recoil", "Events")
-c5.cd()
-c5.Modified()
-c5.Update()
-c5.SaveAs("tt_data_in_SR.pdf")
+
+h_yieldratioZeeData = PlotTemplates.Save1DHisto(yieldratioZeeData, c5, "Recoil", "Yield Ratio (Zee/ZJets)")
+h_yieldratioZeeData.SetMaximum(ymaxZ)
+h_yieldratioZeeData.SetMinimum(yminZ)
+h_yieldratioZeeData.SetMarkerStyle(20)
+h_yieldratioZeeData.SetLineWidth(2)
+
+h_yieldratioZeeMC = PlotTemplates.Save1DHisto(yieldratioZeeMC, c5, "Recoil", "Yield Ratio (Zee/ZJets)")
+h_yieldratioZeeMC.SetMaximum(ymaxZ)
+h_yieldratioZeeMC.SetMinimum(yminZ)
+#h_yieldratioZeeMC.SetMarkerStyle(21)
+#h_yieldratioZeeMC.SetMarkerColor(2)
+h_yieldratioZeeMC.SetLineColor(2)
+h_yieldratioZeeMC.SetLineWidth(3)
+
+h_yieldratioZeeMC.Draw("e1")
+h_yieldratioZeeData.Draw("e1same")
+
+leg5 = PlotTemplates.SetLegend()
+leg5.AddEntry(h_yieldratioZeeMC, "MC")
+leg5.AddEntry(h_yieldratioZeeData, "Data")
+leg5.Draw()
+E5 = PlotTemplates.drawenergy(is2017 = True, data=True)
+for i in E5:
+    i.Draw()
+
+c5.SaveAs("Zee_YieldRatio.pdf")
+
+
+#----------------Plot the Z MuMu yield ratio----------------#
 
 c6 = PlotTemplates.myCanvas()
-h_dataSR = PlotTemplates.Save1DHisto(dataSR, c6, "Recoil", "Events")
-c6.cd()
-c6.Modified()
-c6.Update()
-c6.SaveAs("dataSR.pdf")
-'''
+
+h_yieldratioZmumuData = PlotTemplates.Save1DHisto(yieldratioZmumuData, c6, "Recoil", "Yield Ratio (Zmumu/ZJets)")
+h_yieldratioZmumuData.SetMaximum(ymaxZ)
+h_yieldratioZmumuData.SetMinimum(yminZ)
+h_yieldratioZmumuData.SetMarkerStyle(20)
+h_yieldratioZmumuData.SetLineWidth(2)
+
+h_yieldratioZmumuMC = PlotTemplates.Save1DHisto(yieldratioZmumuMC, c6, "Recoil", "Yield Ratio (Zmumu/ZJets)")
+h_yieldratioZmumuMC.SetMaximum(ymaxZ)
+h_yieldratioZmumuMC.SetMinimum(yminZ)
+#h_yieldratioZmumuMC.SetMarkerStyle(21)
+#h_yieldratioZmumuMC.SetMarkerColor(2)
+h_yieldratioZmumuMC.SetLineColor(2)
+h_yieldratioZmumuMC.SetLineWidth(3)
+
+h_yieldratioZmumuMC.Draw("e1")
+h_yieldratioZmumuData.Draw("e1same")
+
+leg6 = PlotTemplates.SetLegend(coordinate_=[.15,.7,.47,.87])
+leg6.AddEntry(h_yieldratioZmumuMC, "MC")
+leg6.AddEntry(h_yieldratioZmumuData, "Data")
+leg6.Draw()
+E6 = PlotTemplates.drawenergy(is2017 = True, data=True)
+for i in E6:
+    i.Draw()
+
+c6.SaveAs("Zmumu_YieldRatio.pdf")
