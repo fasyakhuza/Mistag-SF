@@ -33,7 +33,7 @@ void nuisanceParameters(){
     pt->SetTextSize(cmstextSize);
     pt->AddText(0.01,0.57,"#font[61]{CMS}");
     
-    TPaveText *pt1 = new TPaveText(0.0877181,0.9,0.9580537,0.96,"brNDC");
+    TPaveText *pt1 = new TPaveText(0.0877181,0.905,0.9580537,0.96,"brNDC");
     pt1->SetBorderSize(0);
     pt1->SetTextAlign(12);
     pt1->SetFillStyle(0);
