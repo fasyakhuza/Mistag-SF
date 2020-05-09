@@ -16,9 +16,8 @@ file = TFile("fitDiagnostics.root")
 #------------------------TOPE------------------------------#
 
 Tope = "shapes_fit_b/TOPE/"
-#getDir = file.cd("shapes_fit_b/TOPE")
 
-#get the histogram inside shapes_fit_b/TOPE
+#get the histograms inside shapes_fit_b/TOPE
 TopeDYjets = file.Get(Tope+"dyjets")
 for i in range(nbins):
     low = TopeDYjets.GetXaxis().GetBinLowEdge(i+1)
@@ -51,7 +50,7 @@ tt_data_in_topE = dataTope - (Topediboson + TopeDYjets + TopeQCD + TopeST + Tope
 
 Topmu = "shapes_fit_b/TOPMU/"
 
-#get the histogram inside shapes_fit_b/TOPMU
+#get the histograms inside shapes_fit_b/TOPMU
 Topmudata = file.Get(Topmu+"data")
 dataTopmu = TH1F("dataTopmu","",nbins,edges)
 nPointsTopmu = Topmudata.GetN()
@@ -77,7 +76,7 @@ tt_data_in_topMU = dataTopmu - (Topmudiboson + TopmuDYjets + TopmuQCD + TopmuST 
 
 We = "shapes_fit_b/WE/"
 
-#get the histogram inside shapes_fit_b/WE
+#get the histograms inside shapes_fit_b/WE
 WeDYjets = file.Get(We+"dyjets")
 for i in range(nbins):
     low = WeDYjets.GetXaxis().GetBinLowEdge(i+1)
@@ -109,7 +108,7 @@ Wjets_data_in_WE = dataWe - (Wediboson + WeDYjets + WeQCD + WeST + WeSMH + WeTT)
 
 Wmu = "shapes_fit_b/WMU/"
 
-#get the histogram inside shapes_fit_b/WMU
+#get the histograms inside shapes_fit_b/WMU
 Wmudata = file.Get(Wmu+"data")
 dataWmu = TH1F("dataWmu","",nbins,edges)
 nPointsWmu = Wmudata.GetN()
@@ -136,7 +135,7 @@ Wjets_data_in_WMU = dataWmu - (Wmudiboson + WmuDYjets + WmuQCD + WmuST + WmuSMH 
 
 Zee = "shapes_fit_b/ZEE/"
 
-#get the histogram inside shapes_fit_b/ZEE
+#get the histograms inside shapes_fit_b/ZEE
 ZeeDYjets = file.Get(Zee+"dyjets")
 for i in range(nbins):
     low = ZeeDYjets.GetXaxis().GetBinLowEdge(i+1)
@@ -172,7 +171,7 @@ DYjets_data_in_ZEE = dataZee - (Zeediboson + ZeeST + ZeeSMH + ZeeTT)
 
 Zmumu = "shapes_fit_b/ZMUMU/"
 
-#get the histogram inside shapes_fit_b/ZMUMU
+#get the histograms inside shapes_fit_b/ZMUMU
 Zmumudata = file.Get(Zmumu+"data")
 dataZmumu = TH1F("dataZmumu","",nbins,edges)
 nPointsZmumu = Zmumudata.GetN()
@@ -196,7 +195,7 @@ DYjets_data_in_ZMUMU = dataZmumu - (Zmumudiboson + ZmumuST + ZmumuSMH + ZmumuTT)
 
 SR = "shapes_fit_b/SR/"
 
-#get the histogram inside shapes_fit_b/SR
+#get the histograms inside shapes_fit_b/SR
 SRdata = file.Get(SR+"data")
 dataSR = TH1F("dataSR","",nbins,edges)
 nPointsSR = SRdata.GetN()
