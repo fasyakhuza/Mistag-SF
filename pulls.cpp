@@ -38,25 +38,32 @@ void pulls(){
     pt1->SetTextAlign(12);
     pt1->SetFillStyle(0);
     pt1->SetTextFont(52);
-    
     pt1->SetTextSize(preliminarytextfize);
     //pt1->AddText(0.155,0.4,"Preliminary");
     pt1->AddText(0.125,0.4,"Internal");
     
-    TPaveText *pt2 = new TPaveText(0.0877181,0.9,0.8480537,0.96,"brNDC");
+    TPaveText *pt2 = new TPaveText(0.0877181,0.9,0.8280537,0.96,"brNDC");
     pt2->SetBorderSize(0);
     pt2->SetTextAlign(12);
     pt2->SetFillStyle(0);
-    pt2->SetTextFont(52);
     pt2->SetTextFont(42);
     pt2->SetTextSize(lumitextsize);
-    pt2->AddText(0.81, 0.5, "41 fb^{-1} (13 TeV)");
+    pt2->AddText(0.81, 0.5, "41.1 fb^{-1} (13 TeV)");
+    
+    TPaveText *pt3 = new TPaveText(0.0377181,0.85,0.9580537,0.88,"brNDC");
+    pt3->SetBorderSize(0);
+    pt3->SetTextAlign(12);
+    pt3->SetFillStyle(0);
+    pt3->SetTextFont(42);
+    pt3->SetTextSize(lumitextsize);
+    pt3->AddText(0.1,0.4, "Asimov Fit");
     
     h1->Draw("same");
     leg2->Draw();
     pt->Draw();
     pt1->Draw();
     pt2->Draw();
+    pt3->Draw();
     
     c->Update();
     c->Modified();
