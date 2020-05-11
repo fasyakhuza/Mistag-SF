@@ -275,6 +275,49 @@ ymaxW = 9.0
 yminZ = 0.0
 ymaxZ = 18.0
 
+def drawenergy(is2017 = True, text_=" Internal", data = True):
+    pt = TPaveText(0.0877181,0.9,0.9580537,0.96,"brNDC")
+    pt.SetBorderSize(0)
+    pt.SetTextAlign(12)
+    pt.SetFillStyle(0)
+    pt.SetTextFont(52)
+    
+    cmstextSize = 0.07
+    preliminarytextfize = cmstextSize * 0.7
+    lumitextsize = cmstextSize *0.7
+    pt.SetTextSize(cmstextSize)
+    text = pt.AddText(0.01,0.57,"#font[61]{CMS}")
+    
+    pt1 = TPaveText(0.0877181,0.904,0.9580537,0.96,"brNDC")
+    pt1.SetBorderSize(0)
+    pt1.SetTextAlign(12)
+    pt1.SetFillStyle(0)
+    pt1.SetTextFont(52)
+    
+    pt1.SetTextSize(preliminarytextfize)
+    #text1 = pt1.AddText(0.155,0.4,"Preliminary")
+    text1 = pt1.AddText(0.125,0.4,text_)
+    
+    pt2 = TPaveText(0.0877181,0.9,0.7280537,0.96,"brNDC")
+    pt2.SetBorderSize(0)
+    pt2.SetTextAlign(12)
+    pt2.SetFillStyle(0)
+    pt2.SetTextFont(52)
+    pt2.SetTextFont(42)
+    pt2.SetTextSize(lumitextsize)
+    
+    pavetext = ''
+    if is2017 and data: pavetext = "41.1 fb^{-1} (13 TeV)"
+    if (not is2017) and data: pavetext = "(13 TeV)"
+    
+    if is2017 and not data: pavetext = "(13 TeV)"
+    if (not is2017) and not data: pavetext = "(13 TeV)"
+    
+    if data: text3 = pt2.AddText(0.735,0.5,pavetext)
+    if not data: text3 = pt2.AddText(0.75,0.5,pavetext)
+    
+    return [pt,pt1,pt2]
+
 #************* TOPE ****************#
 
 c1 = PlotTemplates.myCanvas()
@@ -300,7 +343,7 @@ leg1 = PlotTemplates.SetLegend()
 leg1.AddEntry(h_yieldratioTopeMC, "MC")
 leg1.AddEntry(yieldratioTopeData, "Data")
 leg1.Draw()
-E1 = PlotTemplates.drawenergy(is2017 = True, data=True)
+E1 = drawenergy()
 for i in E1:
     i.Draw()
 
@@ -332,7 +375,7 @@ leg2 = PlotTemplates.SetLegend()
 leg2.AddEntry(h_yieldratioTopmuMC, "MC")
 leg2.AddEntry(yieldratioTopmuData, "Data")
 leg2.Draw()
-E2 = PlotTemplates.drawenergy(is2017 = True, data=True)
+E2 = drawenergy()
 for i in E2:
     i.Draw()
 
@@ -364,7 +407,7 @@ leg3 = PlotTemplates.SetLegend()
 leg3.AddEntry(h_yieldratioWeMC, "MC")
 leg3.AddEntry(yieldratioWeData, "Data")
 leg3.Draw()
-E3 = PlotTemplates.drawenergy(is2017 = True, data=True)
+E3 = drawenergy()
 for i in E3:
     i.Draw()
 
@@ -396,7 +439,7 @@ leg4 = PlotTemplates.SetLegend()
 leg4.AddEntry(h_yieldratioWmuMC, "MC")
 leg4.AddEntry(yieldratioWmuData, "Data")
 leg4.Draw()
-E4 = PlotTemplates.drawenergy(is2017 = True, data=True)
+E4 = drawenergy()
 for i in E4:
     i.Draw()
 
@@ -428,7 +471,7 @@ leg5 = PlotTemplates.SetLegend()
 leg5.AddEntry(h_yieldratioZeeMC, "MC")
 leg5.AddEntry(h_yieldratioZeeData, "Data")
 leg5.Draw()
-E5 = PlotTemplates.drawenergy(is2017 = True, data=True)
+E5 = drawenergy()
 for i in E5:
     i.Draw()
 
@@ -456,11 +499,11 @@ h_yieldratioZmumuMC.SetLineWidth(3)
 h_yieldratioZmumuMC.Draw("e1")
 h_yieldratioZmumuData.Draw("e1same")
 
-leg6 = PlotTemplates.SetLegend(coordinate_=[.15,.7,.47,.87])
+leg6 = PlotTemplates.SetLegend()
 leg6.AddEntry(h_yieldratioZmumuMC, "MC")
 leg6.AddEntry(h_yieldratioZmumuData, "Data")
 leg6.Draw()
-E6 = PlotTemplates.drawenergy(is2017 = True, data=True)
+E6 = drawenergy()
 for i in E6:
     i.Draw()
 
