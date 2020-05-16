@@ -214,8 +214,9 @@ def myStack(colorlist_, backgroundlist_, signal_, prefit_, data_, postfit_, lege
     prefithist.Draw("e1")
 
     postfithist = dataPredRatio(data_ = data_, totalBkg_ = postfit_)
-    postfithist.SetLineColor(4)
+    postfithist.SetLineColor(634)
     postfithist.SetLineWidth(2)
+    postfithist.SetMarkerColor(634)
     postfithist.GetYaxis().SetTitle("#frac{Data-Pred}{Pred}")
     postfithist.GetXaxis().SetTitle("Recoil (GeV)")
     leg1.AddEntry(postfithist, "Postfit", "lep")
