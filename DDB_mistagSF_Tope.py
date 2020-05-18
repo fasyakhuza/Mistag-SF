@@ -379,7 +379,8 @@ for i in range(EventsSE):
         h_pfdatafailp.Fill(0.5)
         h_pfdatapassp.Fill(1.5)
 
-SubtractedData = h_SE - (h_sumWJets + h_sumDiboson)# + h_ttHad + h_ttLep)
+SubtractedData = h_SE.Clone("SubtractedData")
+SubtractedData = SubtractedData - (h_sumWJets + h_sumDiboson)# + h_ttHad + h_ttLep)
 SubtractedDataPassed = h_SE_Passed - (h_sumWJetsPassed + h_sumDibosonPassed)# + h_ttHadPassed + h_ttLepPassed)
 SubtractedDataFailed = h_SE_Failed - (h_sumWJetsFailed + h_sumDibosonFailed)# + h_ttHadFailed + h_ttLepFailed)
 
@@ -414,28 +415,28 @@ print " "
 
 
 
-
+'''
 #------------Overlap histograms in Full Canvas-------------#
 
 frac_match_text = str(round(frac_match, 2))
 frac_Wmatch_text = str(round(frac_Wmatch, 2))
 frac_unmatch_text = str(round(frac_unmatch, 2))
 
-'''
-h_TopMatchFinal = h_TopMatch + h_Wmatch + h_unmatch + h_ttHad + h_ttLep + h_sumWJets + h_sumDiboson
-h_WmatchFinal = h_Wmatch + h_unmatch + h_ttHad + h_ttLep + h_sumWJets + h_sumDiboson
-h_unmatchFinal = h_unmatch + h_ttHad + h_ttLep + h_sumWJets + h_sumDiboson
-h_ttHadFinal = h_ttHad + h_ttLep + h_sumWJets + h_sumDiboson
-h_ttLepFinal = h_ttLep + h_sumWJets + h_sumDiboson
-h_sumWJetsFinal = h_sumWJets + h_sumDiboson
-'''
 
-h_sumWJetsFinal = h_sumWJets + h_sumDiboson
-h_ttLepFinal = h_sumWJetsFinal # + h_ttLep
-h_ttHadFinal = h_ttLepFinal # + h_ttHad
-h_unmatchFinal = h_unmatch + h_ttHadFinal
-h_WmatchFinal = h_Wmatch + h_unmatchFinal
-h_TopMatchFinal = h_TopMatch + h_WmatchFinal
+h_TopMatchFinal = h_TopMatch.Clone("h_TopMatchFinal")
+h_WmatchFinal = h_Wmatch.Clone("h_WmatchFinal")
+h_unmatchFinal = h_unmatch.Clone("h_unmatchFinal")
+h_ttHadFinal = h_ttHad.Clone("h_ttHadFinal")
+h_ttLepFinal = h_ttLep.Clone("h_ttLepFinal")
+h_sumWJetsFinal = h_sumWJets.Clone("h_sumWJetsFinal")
+
+
+h_sumWJetsFinal = h_sumWJetsFinal + h_sumDiboson
+h_ttLepFinal = h_sumWJetsFinal # + h_ttLepFinal
+h_ttHadFinal = h_ttLepFinal # + h_ttHadFinal
+h_unmatchFinal = h_unmatchFinal + h_ttHadFinal
+h_WmatchFinal = h_WmatchFinal + h_unmatchFinal
+h_TopMatchFinal = h_TopMatchFinal + h_WmatchFinal
 
 full = TCanvas("full","",900,700) #width-height
 full.SetLeftMargin(0.15)
@@ -447,7 +448,7 @@ leg.SetTextSize(0.027)
 
 #h_TopMatchFinal.Rebin(2)
 h_TopMatchFinal.SetFillColor(821)
-h_TopMatchFinal.SetLineColor(923)
+h_TopMatchFinal.SetLineColor(821)#923
 h_TopMatchFinal.GetXaxis().SetTitle("Double b score")
 h_TopMatchFinal.GetYaxis().SetTitle("Events/Bin")
 h_TopMatchFinal.SetMaximum(totalmax)
@@ -455,7 +456,7 @@ leg.AddEntry(h_TopMatchFinal, "Top (mtch.) ("+frac_match_text+"%)", "f")
 
 #h_WmatchFinal.Rebin(2)
 h_WmatchFinal.SetFillColor(822)
-h_WmatchFinal.SetLineColor(923)
+h_WmatchFinal.SetLineColor(822)
 h_WmatchFinal.GetXaxis().SetTitle("Double b score")
 h_WmatchFinal.GetYaxis().SetTitle("Events/Bin")
 h_WmatchFinal.SetMaximum(totalmax)
@@ -463,16 +464,17 @@ leg.AddEntry(h_WmatchFinal, "Top (W-mtch.) ("+frac_Wmatch_text+"%)","f")
 
 #h_unmatchFinal.Rebin(2)
 h_unmatchFinal.SetFillColor(813)
-h_unmatchFinal.SetLineColor(923)
+h_unmatchFinal.SetLineColor(813)
 h_unmatchFinal.GetXaxis().SetTitle("Double b score")
 h_unmatchFinal.GetYaxis().SetTitle("Events/Bin")
 h_unmatchFinal.SetMaximum(totalmax)
 leg.AddEntry(h_unmatchFinal, "Top (unmtch.) ("+frac_unmatch_text+"%)","f")
 
 '''
+'''
 #h_ttHadFinal.Rebin(2)
 h_ttHadFinal.SetFillColor(800)
-h_ttHadFinal.SetLineColor(923)
+h_ttHadFinal.SetLineColor(800)
 h_ttHadFinal.GetXaxis().SetTitle("Double b score")
 h_ttHadFinal.GetYaxis().SetTitle("Events/Bin")
 h_ttHadFinal.SetMaximum(totalmax)
@@ -481,16 +483,16 @@ leg.AddEntry(h_ttHadFinal, "tt Hadronic","f")
 
 #h_ttLepFinal.Rebin(2)
 h_ttLepFinal.SetFillColor(809)
-h_ttLepFinal.SetLineColor(923)
+h_ttLepFinal.SetLineColor(809)
 h_ttLepFinal.GetXaxis().SetTitle("Double b score")
 h_ttLepFinal.GetYaxis().SetTitle("Events/Bin")
 h_ttLepFinal.SetMaximum(totalmax)
 leg.AddEntry(h_ttLepFinal, "tt Leptonic","f")
 '''
-
+'''
 #h_sumWJetsFinal.Rebin(2)
 h_sumWJetsFinal.SetFillColor(854)
-h_sumWJetsFinal.SetLineColor(923)
+h_sumWJetsFinal.SetLineColor(854)
 h_sumWJetsFinal.GetXaxis().SetTitle("Double b score")
 h_sumWJetsFinal.GetYaxis().SetTitle("Events/Bin")
 h_sumWJetsFinal.SetMaximum(totalmax)
@@ -498,7 +500,7 @@ leg.AddEntry(h_sumWJetsFinal, "W+Jets","f")
 
 #h_sumDiboson.Rebin(2)
 h_sumDiboson.SetFillColor(627)
-h_sumDiboson.SetLineColor(923)
+h_sumDiboson.SetLineColor(627)
 h_sumDiboson.GetXaxis().SetTitle("Double b score")
 h_sumDiboson.GetYaxis().SetTitle("Events/Bin")
 h_sumDiboson.SetMaximum(totalmax)
@@ -551,7 +553,7 @@ leg2.SetTextSize(0.027)
 
 #h_ttFailed.Rebin(2)
 h_ttFailed.SetFillColor(821)
-h_ttFailed.SetLineColor(922)
+h_ttFailed.SetLineColor(821)#922
 h_ttFailed.GetXaxis().SetTitle("Double b score")
 h_ttFailed.GetYaxis().SetTitle("Events/Bin")
 h_ttFailed.SetMaximum(ttmax)
@@ -559,7 +561,7 @@ leg2.AddEntry(h_ttFailed, "t#bar{t}", "f")
 
 #h_ttPassed.Rebin(2)
 h_ttPassed.SetFillColor(622)
-h_ttPassed.SetLineColor(922)
+h_ttPassed.SetLineColor(622)
 h_ttPassed.GetXaxis().SetTitle("Double b score")
 h_ttPassed.GetYaxis().SetTitle("Events/Bin")
 h_ttPassed.SetMaximum(ttmax)
@@ -571,7 +573,7 @@ SubtractedData.SetMarkerStyle(20)
 SubtractedData.SetMarkerSize(1.5)
 SubtractedData.GetXaxis().SetTitle("Double b score")
 SubtractedData.GetYaxis().SetTitle("Events/Bin")
-leg2.AddEntry(SubtractedData, "Data-Bkg.", "lep")
+leg2.AddEntry(SubtractedData, "Subtracted Data", "lep")
 
 #-------Draw Histogram in Subtract Canvas---------#
 
@@ -590,17 +592,35 @@ lt2.DrawLatexNDC(0.71,0.92,"#scale[0.7]{#bf{41.5 fb^{-1} (13 TeV)}}")
 #subtract.Modified()
 #subtract.Update()
 subtract.SaveAs("new_output/Tope_subtracted.pdf")
-
+'''
 
 #------------Overlap histograms in Scalefactor Canvas-------------#
 
-scalefactor = TCanvas("scalefactor","", 200, 10, 700, 900)
-scalefactor.SetLeftMargin(0.17)
+scalefactor = TCanvas("scalefactor","", 700, 900)
+scalefactor.SetTopMargin(0.1)
+scalefactor.SetBottomMargin(0.15)
+scalefactor.SetRightMargin(0.1)
+scalefactor.SetLeftMargin(0.15)
 gStyle.SetOptStat(0)
 
-pad1 = TPad("pad1", "", 0.03, 0.25, 0.97, 0.92)
-pad2 = TPad("pad2", "", 0.09, 0.02, 0.375, 0.245)
-pad3 = TPad("pad3", "", 0.38, 0.02, 0.94, 0.245)
+pad1 = TPad("pad1", "", 0.01, 0.25, 0.93, 1.0)
+pad1.SetTopMargin(0.1)
+pad1.SetRightMargin(0.05)
+pad1.SetLeftMargin(0.17)
+pad1.SetBottomMargin(0.05)
+
+pad2 = TPad("pad2", "", 0.0, 0.0, 0.375, 0.24)
+pad2.SetTopMargin(0.0)
+pad2.SetRightMargin(0.1)
+pad2.SetLeftMargin(0.0)
+pad2.SetBottomMargin(0.0)
+
+pad3 = TPad("pad3", "", 0.38, 0.025, 0.94, 0.25)
+pad2.SetTopMargin(0.05)
+pad2.SetRightMargin(0.0)
+pad2.SetLeftMargin(0.45)
+pad2.SetBottomMargin(0.2)
+
 pad1.Draw()
 pad2.Draw()
 pad3.Draw()
@@ -628,7 +648,7 @@ h_pfdata.GetXaxis().ChangeLabel(1,-1,0)
 h_pfdata.GetXaxis().ChangeLabel(3,-1,0)
 h_pfdata.GetXaxis().ChangeLabel(-1,-1,0)
 h_pfdata.GetXaxis().ChangeLabel(-2,-1,-1,-1,-1,-1,"Pass")
-leg3.AddEntry("h_pfdata", "Data-Bkg.", "lep")
+leg3.AddEntry(h_pfdata, "Subtracted Data", "lep")
 
 #pfMCtotal = h_tt.Integral()
 #h_pfMC = h_pfMC*(1/pfMCtotal)
@@ -636,17 +656,7 @@ h_pfMC.Sumw2()
 h_pfMC.Divide(h_pfMCtotal)
 h_pfMC.SetLineColor(870)
 h_pfMC.SetLineWidth(3)
-h_pfMC.SetMaximum(1.5)
-h_pfMC.GetYaxis().SetTitle("Fraction")
-h_pfMC.GetXaxis().SetTickLength(0.03)
-h_pfMC.GetXaxis().SetTickLength(0.03)
-h_pfMC.GetXaxis().SetNdivisions(104)
-h_pfMC.GetXaxis().ChangeLabel(2,-1,-1,-1,-1,-1,"Fail")
-h_pfMC.GetXaxis().ChangeLabel(1,-1,0)
-h_pfMC.GetXaxis().ChangeLabel(3,-1,0)
-h_pfMC.GetXaxis().ChangeLabel(-1,-1,0)
-h_pfMC.GetXaxis().ChangeLabel(-2,-1,-1,-1,-1,-1,"Pass")
-leg3.AddEntry("h_pfMC", "tt", "l")
+leg3.AddEntry(h_pfMC, "tt", "l")
 
 h_pfdata.Draw("e1")
 h_pfMC.Draw("histsame")
@@ -675,32 +685,29 @@ Cloned_frac_ttPassed.Divide(Cloned_frac_tt)
 Cloned_frac_tt_data_passed.SetLineColor(1)
 Cloned_frac_tt_data_passed.SetLineWidth(2)
 Cloned_frac_tt_data_passed.SetMarkerStyle(20)
-Cloned_frac_tt_data_passed.GetYaxis().SetTitle(" ")
-Cloned_frac_tt_data_passed.GetYaxis().SetNdivisions(204)
+Cloned_frac_tt_data_passed.GetYaxis().SetTitle("Fraction")
+Cloned_frac_tt_data_passed.GetYaxis().SetTitleSize(0.09)
+Cloned_frac_tt_data_passed.GetYaxis().SetLabelSize(0.1)
+Cloned_frac_tt_data_passed.GetYaxis().SetNdivisions(404)
 Cloned_frac_tt_data_passed.SetMaximum(0.2)
-Cloned_frac_tt_data_passed.GetXaxis().SetTitle(" ")
-Cloned_frac_tt_data_passed.GetXaxis().SetLabelOffset(999)
+Cloned_frac_tt_data_passed.SetMinimum(0.0)
+Cloned_frac_tt_data_passed.GetXaxis().SetTitle("Pass")
+Cloned_frac_tt_data_passed.GetXaxis().SetTitleSize(0.09)
+Cloned_frac_tt_data_passed.GetXaxis().SetTitleOffset(0.4)
 Cloned_frac_tt_data_passed.GetXaxis().SetLabelSize(0)
 Cloned_frac_tt_data_passed.GetXaxis().SetTickLength(0)
-Cloned_frac_tt_data_passed.GetYaxis().SetLabelSize(0.05)
 
 Cloned_frac_ttPassed.SetLineColor(870)
 Cloned_frac_ttPassed.SetLineWidth(3)
-Cloned_frac_ttPassed.GetYaxis().SetTitle(" ")
-Cloned_frac_ttPassed.GetYaxis().SetNdivisions(204)
-Cloned_frac_ttPassed.SetMaximum(0.2)
-Cloned_frac_ttPassed.GetXaxis().SetTitle(" ")
-Cloned_frac_ttPassed.GetXaxis().SetLabelOffset(999)
-Cloned_frac_ttPassed.GetXaxis().SetLabelSize(0)
-Cloned_frac_ttPassed.GetXaxis().SetTickLength(0)
-Cloned_frac_ttPassed.GetYaxis().SetLabelSize(0.05)
 
 Cloned_frac_tt_data_passed.Draw("e1")
 Cloned_frac_ttPassed.Draw("histsame")
 
+'''
 lt4 = TLatex()
 lt4.DrawLatexNDC(0.21,0.72,"#scale[2.0]{Eff.}")
 lt4.Draw()
+'''
 
 #** Pad3 **#
 pad3.cd()
@@ -725,6 +732,7 @@ mistagSF.GetXaxis().SetLabelSize(0)
 mistagSF.GetXaxis().SetTickLength(0)
 mistagSF.GetYaxis().SetLabelSize(0.1)
 mistagSF.GetYaxis().SetNdivisions(404)
+mistagSF.GetYaxis().SetTitle(" ")
 
 mistagSF.Draw("hist")
 
@@ -755,10 +763,10 @@ print " "
 print "Generate TopE.root"
 
 outfile = TFile("TopE.root", "RECREATE")
-h_TopMatchFinal.Write()
-h_WmatchFinal.Write()
-h_unmatchFinal.Write()
-h_sumWJetsFinal.Write()
+h_TopMatch.Write()
+h_Wmatch.Write()
+h_unmatch.Write()
+h_sumWJets.Write()
 h_sumDiboson.Write()
 h_SE.Write()
 h_ttFailed.Write()
