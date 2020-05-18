@@ -123,7 +123,7 @@ def myPad():
     
     return [c, padMain, padRatio]
 
-def myLegend(coordinate=[0.5,0.6,0.87,0.87], ncol=1):
+def myLegend(coordinate=[0.48,0.55,0.97,0.87], ncol=1):
     co = coordinate
     leg = TLegend(co[0], co[1], co[2], co[3])
     leg.SetNColumns(ncol)
@@ -134,7 +134,7 @@ def myLegend(coordinate=[0.5,0.6,0.87,0.87], ncol=1):
     leg.SetFillColor(0)
     leg.SetFillStyle(0)
     leg.SetTextFont(42)
-    leg.SetTextSize(0.03)
+    leg.SetTextSize(0.035)
     return leg
 
 def dataPredRatio(data_, totalBkg_):
@@ -147,15 +147,18 @@ def myStack(colorlist_, backgroundlist_, signal_, prefit_, data_, postfit_, lege
     pad = myPad()
     
     pad[1].cd()
-
+    
+    gPad.SetLogy()
+    
     data_.SetLineColor(1)
-    data_.SetLineWidth(2)
+    data_.SetLineWidth(3)
     data_.SetMarkerStyle(20)
     data_.SetMarkerColor(1)
-    data_.GetYaxis().SetLabelSize(0.04)
+    data_.SetMarkerSize(1.5)
+    data_.GetYaxis().SetLabelSize(0.05)
     data_.GetYaxis().SetTitleOffset(1.2)
-    data_.GetYaxis().SetTitleSize(0.04)
-    data_.GetYaxis().SetTitle("Events/(200)")
+    data_.GetYaxis().SetTitleSize(0.05)
+    data_.GetYaxis().SetTitle("Events/GeV")
     leg.AddEntry(data_, "Data", "lep")
     data_.Draw("e1")
     
@@ -173,21 +176,21 @@ def myStack(colorlist_, backgroundlist_, signal_, prefit_, data_, postfit_, lege
     hs.Draw("same")
     data_.Draw("e1same")
 
-    signal_.SetLineColor(4)
-    signal_.SetLineWidth(3)
-    signal_.SetMarkerStyle(21)
-    signal_.SetMarkerColor(2)
-    leg.AddEntry(signal_, "Signal", "l")
-    signal_.Draw("histsame")
-
     postfit_.SetLineColor(634)
-    postfit_.SetLineWidth(3)
+    postfit_.SetLineWidth(4)
     postfit_.GetXaxis().SetLabelSize(0.07)
     postfit_.GetYaxis().SetLabelSize(0.06)
     postfit_.GetYaxis().SetTitleOffset(0.1)
     leg.AddEntry(postfit_, "Post-fit", "l")
     postfit_.Draw("histsame")
 
+    signal_.SetLineColor(4)
+    signal_.SetLineWidth(3)
+    signal_.SetMarkerStyle(21)
+    signal_.SetMarkerColor(2)
+    leg.AddEntry(signal_, "Signal", "l")
+    signal_.Draw("histsame")
+    
     leg.Draw()
 
     drawE = drawenergy()
@@ -196,18 +199,20 @@ def myStack(colorlist_, backgroundlist_, signal_, prefit_, data_, postfit_, lege
 
     pad[2].cd()
 
-    leg1 = myLegend(coordinate=[0.5,0.35,0.87,0.55])
+    leg1 = myLegend(coordinate=[0.5,0.39,0.87,0.6])
     leg1.SetTextSize(0.1)
 
     prefithist = dataPredRatio(data_ = data_, totalBkg_ = prefit_)
     prefithist.SetLineColor(1)
-    prefithist.SetLineWidth(2)
-    prefithist.GetXaxis().SetLabelSize(0.115)
+    prefithist.SetLineWidth(3)
+    prefithist.SetMarkerSize(1.5)
+    prefithist.GetXaxis().SetLabelSize(0.13)
     prefithist.GetXaxis().SetTitleOffset(1)
-    prefithist.GetXaxis().SetTitleSize(0.115)
-    prefithist.GetYaxis().SetLabelSize(0.1)
+    prefithist.GetXaxis().SetTitleSize(0.13)
+    prefithist.GetXaxis().SetTickLength(0.1)
+    prefithist.GetYaxis().SetLabelSize(0.12)
     prefithist.GetYaxis().SetTitleOffset(0.5)
-    prefithist.GetYaxis().SetTitleSize(0.115)
+    prefithist.GetYaxis().SetTitleSize(0.13)
     prefithist.GetYaxis().SetTitle("#frac{Data-Pred}{Pred}")
     prefithist.GetXaxis().SetTitle("Recoil (GeV)")
     leg1.AddEntry(prefithist, "Prefit", "lep")
@@ -215,7 +220,8 @@ def myStack(colorlist_, backgroundlist_, signal_, prefit_, data_, postfit_, lege
 
     postfithist = dataPredRatio(data_ = data_, totalBkg_ = postfit_)
     postfithist.SetLineColor(634)
-    postfithist.SetLineWidth(2)
+    postfithist.SetLineWidth(3)
+    postfithist.SetMarkerSize(1.5)
     postfithist.SetMarkerColor(634)
     postfithist.GetYaxis().SetTitle("#frac{Data-Pred}{Pred}")
     postfithist.GetXaxis().SetTitle("Recoil (GeV)")
