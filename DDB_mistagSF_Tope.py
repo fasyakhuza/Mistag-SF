@@ -84,7 +84,8 @@ h_pfMCfailp = h_pfMCfailp*(L*xsTop/totalEventsTop)
 h_pfMCpassf = h_pfMCpassf*(L*xsTop/totalEventsTop)
 h_pfMCpassp = h_pfMCpassp*(L*xsTop/totalEventsTop)
 
-h_tt = h_ttFailed + h_ttPassed
+h_tt = h_ttFailed.Clone("h_tt")
+h_tt = h_tt + h_ttPassed
 frac_match = (h_TopMatch.Integral())/(h_tt.Integral())*100
 frac_Wmatch = (h_Wmatch.Integral())/(h_tt.Integral())*100
 frac_unmatch = (h_unmatch.Integral())/(h_tt.Integral())*100
@@ -111,7 +112,10 @@ Cloned_frac_ttFailed = h_ttFailed.Clone("Cloned_frac_ttFailed")
 Cloned_frac_ttPassed = h_ttPassed.Clone("Cloned_frac_ttPassed")
 Cloned_frac_tt = h_tt.Clone("Cloned_frac_tt")
 
-h_pfMCtotal = h_pfMCfailf + h_pfMCfailp + h_pfMCpassf + h_pfMCpassp
+h_pfMCtotal = h_pfMCfailf.Clone("h_pfMCtotal")
+h_pfMCtotal = h_pfMCtotal + h_pfMCfailp + h_pfMCpassf + h_pfMCpassp
+
+h_pfMCtopE = h_pfMC.Clone("h_pfMCtopE")
 
 
 
@@ -381,17 +385,21 @@ for i in range(EventsSE):
 
 SubtractedData = h_SE.Clone("SubtractedData")
 SubtractedData = SubtractedData - (h_sumWJets + h_sumDiboson)# + h_ttHad + h_ttLep)
-SubtractedDataPassed = h_SE_Passed - (h_sumWJetsPassed + h_sumDibosonPassed)# + h_ttHadPassed + h_ttLepPassed)
-SubtractedDataFailed = h_SE_Failed - (h_sumWJetsFailed + h_sumDibosonFailed)# + h_ttHadFailed + h_ttLepFailed)
+SubtractedDataPassed = h_SE_Passed.Clone("SubtractedDataPassed")
+SubtractedDataPassed = SubtractedDataPassed - (h_sumWJetsPassed + h_sumDibosonPassed)# + h_ttHadPassed + h_ttLepPassed)
+SubtractedDataFailed = h_SE_Failed.Clone("SubtractedDataFailed")
+SubtractedDataFailed = SubtractedDataFailed - (h_sumWJetsFailed + h_sumDibosonFailed)# + h_ttHadFailed + h_ttLepFailed)
 
 h_pfdata = h_pfdata - (h_sumpfWjets + h_sumpfdiboson)# + h_pfttHad + h_pfttLep)
 h_pfdatafailf = h_pfdatafailf - (h_sumpfWjetsfailf + h_sumpfdibosonfailf)
 h_pfdatafailp = h_pfdatafailp - (h_sumpfWjetsfailp + h_sumpfdibosonfailp)
 h_pfdatapassf = h_pfdatapassf - (h_sumpfWjetspassf + h_sumpfdibosonpassf)
 h_pfdatapassp = h_pfdatapassp - (h_sumpfWjetspassp + h_sumpfdibosonpassp)
-h_pfdatatotal = h_pfdatafailf + h_pfdatafailp + h_pfdatapassf + h_pfdatapassp
+h_pfdatatotal = h_pfdatafailf.Clone("h_pfdatatotal")
+h_pfdatatotal = h_pfdatatotal + h_pfdatafailp + h_pfdatapassf + h_pfdatapassp
 
-h_totaldata = SubtractedDataPassed + SubtractedDataFailed
+h_totaldata = SubtractedDataPassed.Clone("h_totaldata")
+h_totaldata = h_totaldata + SubtractedDataFailed
 frac_tt_data_passed = (SubtractedDataPassed.Integral())/(h_totaldata.Integral())*100
 frac_tt_data_failed = (SubtractedDataFailed.Integral())/(h_totaldata.Integral())*100
 
@@ -403,6 +411,8 @@ print " "
 Cloned_frac_tt_data_failed = SubtractedDataFailed.Clone("Cloned_frac_tt_data_failed")
 Cloned_frac_tt_data_passed = SubtractedDataPassed.Clone("Cloned_frac_tt_data_passed")
 Cloned_frac_tt_data_total = h_totaldata.Clone("Cloned_frac_tt_data_total")
+
+h_pfdataTopE = h_pfdata.Clone("h_pfdataTopE")
 
 
 
@@ -769,12 +779,19 @@ h_unmatch.Write()
 h_sumWJets.Write()
 h_sumDiboson.Write()
 h_SE.Write()
+
 h_ttFailed.Write()
 h_ttPassed.Write()
 SubtractedData.Write()
-h_pfdata.Write()
-h_pfMC.Write()
-Cloned_frac_tt_data_passed.Write()
-Cloned_frac_ttPassed.Write()
-mistagSF.Write()
+
+h_pfdataTopE.Write()
+h_pfdatatotal.Write()
+h_pfMCtopE.Write()
+h_pfMCtotal.Write()
+
+SubtractedDataPassed.Write()
+h_totaldata.Write()
+#h_ttPassed.Write()
+h_tt.Write()
+
 outfile.Close()
