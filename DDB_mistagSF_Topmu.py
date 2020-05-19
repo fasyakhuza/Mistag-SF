@@ -425,7 +425,7 @@ print " "
 
 
 
-'''
+
 #------------Overlap histograms in Full Canvas-------------#
 
 frac_match_text = str(round(frac_match, 2))
@@ -480,7 +480,7 @@ h_unmatchFinal.GetYaxis().SetTitle("Events/Bin")
 h_unmatchFinal.SetMaximum(totalmax)
 leg.AddEntry(h_unmatchFinal, "Top (unmtch.) ("+frac_unmatch_text+"%)","f")
 
-'''
+
 '''
 #h_ttHadFinal.Rebin(2)
 h_ttHadFinal.SetFillColor(800)
@@ -499,7 +499,7 @@ h_ttLepFinal.GetYaxis().SetTitle("Events/Bin")
 h_ttLepFinal.SetMaximum(totalmax)
 leg.AddEntry(h_ttLepFinal, "tt Leptonic","f")
 '''
-'''
+
 #h_sumWJetsFinal.Rebin(2)
 h_sumWJetsFinal.SetFillColor(854)
 h_sumWJetsFinal.SetLineColor(854)
@@ -602,7 +602,7 @@ lt2.DrawLatexNDC(0.71,0.92,"#scale[0.7]{#bf{41.5 fb^{-1} (13 TeV)}}")
 #subtract.Modified()
 subtract.Update()
 subtract.SaveAs("new_output/Topmu_subtracted.pdf")
-'''
+
 
 #------------Overlap histograms in Scalefactor Canvas-------------#
 
@@ -665,11 +665,12 @@ leg3.AddEntry("h_pfdata", "Subtracted Data", "lep")
 h_pfMC.Sumw2()
 h_pfMC.Divide(h_pfMCtotal)
 h_pfMC.SetLineColor(870)
+h_pfMC.SetMarkerColor(870)
 h_pfMC.SetLineWidth(3)
-leg3.AddEntry("h_pfMC", "tt", "l")
+leg3.AddEntry("h_pfMC", "tt", "lep")
 
 h_pfdata.Draw("e1")
-h_pfMC.Draw("histsame")
+h_pfMC.Draw("e1histsame")
 leg3.Draw()
 
 lt3 = TLatex()
@@ -701,17 +702,20 @@ Cloned_frac_tt_data_passed.GetYaxis().SetNdivisions(204)
 Cloned_frac_tt_data_passed.GetYaxis().SetLabelSize(0.1)
 Cloned_frac_tt_data_passed.SetMaximum(0.2)
 Cloned_frac_tt_data_passed.SetMinimum(0.0)
-Cloned_frac_tt_data_passed.GetXaxis().SetTitle("Pass")
-Cloned_frac_tt_data_passed.GetXaxis().SetTitleSize(0.09)
-Cloned_frac_tt_data_passed.GetXaxis().SetTitleOffset(0.4)
-Cloned_frac_tt_data_passed.GetXaxis().SetLabelSize(0)
-Cloned_frac_tt_data_passed.GetXaxis().SetTickLength(0)
+Cloned_frac_tt_data_passed.GetXaxis().SetTitle("")
+Cloned_frac_tt_data_passed.GetXaxis().SetLabelSize(0.09)
+Cloned_frac_tt_data_passed.GetXaxis().SetLabelOffset(0.02)
+Cloned_frac_tt_data_passed.GetXaxis().SetNdivisions(104)
+Cloned_frac_tt_data_passed.GetXaxis().ChangeLabel(2,-1,-1,-1,-1,-1,"Pass")
+Cloned_frac_tt_data_passed.GetXaxis().ChangeLabel(1,-1,0)
+Cloned_frac_tt_data_passed.GetXaxis().ChangeLabel(-1,-1,0)
 
 Cloned_frac_ttPassed.SetLineColor(870)
+Cloned_frac_ttPassed.SetMarkerColor(870)
 Cloned_frac_ttPassed.SetLineWidth(3)
 
 Cloned_frac_tt_data_passed.Draw("e1")
-Cloned_frac_ttPassed.Draw("histsame")
+Cloned_frac_ttPassed.Draw("e1histsame")
 
 '''
 lt4 = TLatex()
@@ -733,6 +737,7 @@ SFfinal = round(SF, 2)
 SFtext = "SF = "+str(SFfinal)
 
 mistagSF.SetLineColor(797)
+mistagSF.SetMarkerColor(797)
 mistagSF.SetLineWidth(3)
 mistagSF.SetMaximum(1.2)
 mistagSF.SetMinimum(0.6)
@@ -744,7 +749,7 @@ mistagSF.GetYaxis().SetLabelSize(0.1)
 mistagSF.GetYaxis().SetNdivisions(404)
 mistagSF.GetYaxis().SetTitle(" ")
 
-mistagSF.Draw("hist")
+mistagSF.Draw("e1hist")
 
 '''
 lt5 = TLatex()

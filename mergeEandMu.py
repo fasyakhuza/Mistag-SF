@@ -20,11 +20,13 @@ failMCsubtractTopE = openfile1.Get("h_ttFailed")
 passMCsubtractTopE = openfile1.Get("h_ttPassed")
 subtractedDataTopE = openfile1.Get("SubtractedData")
 
-pfdataTopE = openfile1.Get("h_pfdata")
-pfMCtopE = openfile1.Get("h_pfMC")
-datapassTopE = openfile1.Get("Cloned_frac_tt_data_passed")
-MCpassTopE = openfile1.Get("Cloned_frac_ttPassed")
-#sfTopE = openfile1.Get("mistagSF")
+pfdataTopE = openfile1.Get("h_pfdataTopE")
+pfdatatotalTopE = openfile1.Get("h_pfdatatotal")
+pfMCtopE = openfile1.Get("h_pfMCtopE")
+pfMCtotalTopE = openfile1.Get("h_pfMCtotal")
+datapassTopE = openfile1.Get("SubtractedDataPassed")
+totaldataTopE = openfile1.Get("h_totaldata")
+totalMCtopE = openfile1.Get("h_tt")
 
 
 print "Top Muon Region"
@@ -43,11 +45,13 @@ failMCsubtractTopMu = openfile2.Get("h_ttFailed")
 passMCsubtractTopMu = openfile2.Get("h_ttPassed")
 subtractedDataTopMu = openfile2.Get("SubtractedData")
 
-pfdataTopMu = openfile2.Get("h_pfdata")
-pfMCtopMu = openfile2.Get("h_pfMC")
-datapassTopMu = openfile2.Get("Cloned_frac_tt_data_passed")
-MCpassTopMu = openfile2.Get("Cloned_frac_ttPassed")
-#sfTopMu = openfile2.Get("mistagSF")
+pfdataTopMu = openfile2.Get("h_pfdataTopMu")
+pfdatatotalTopMu = openfile2.Get("h_pfdatatotal")
+pfMCtopMu = openfile2.Get("h_pfMCtopMu")
+pfMCtotalTopMu = openfile2.Get("h_pfMCtotal")
+datapassTopMu = openfile2.Get("SubtractedDataPassed")
+totaldataTopMu = openfile2.Get("h_totaldata")
+totalMCtopMu = openfile2.Get("h_tt")
 
 print "get histograms from root files: done"
 print " "
@@ -65,14 +69,39 @@ wjetsMerge = wjetsTopE + wjetsTopMu
 dibosonMerge = dibosonTopE + dibosonTopMu
 unsubtractedDataMerge = unsubtractedDataTopE + unsubtractedDataTopMu
 
+
 failMCsubtractMerge = failMCsubtractTopE + failMCsubtractTopMu
-passMCsubtractMerge = passMCsubtractTopE + passMCsubtractTopMu
+passMCsubtractMerge = passMCsubtractTopE.Clone("passMCsubtractMerge")
+passMCsubtractMerge = passMCsubtractMerge + passMCsubtractTopMu
 subtractedDataMerge = subtractedDataTopE + subtractedDataTopMu
 
+
 pfdataMerge = pfdataTopE + pfdataTopMu
+pfdatatotalMerge = pfdatatotalTopE + pfdatatotalTopMu
+pfdataMerge.Sumw2()
+pfdataMerge.Divide(pfdatatotalMerge)
+
 pfMCMerge = pfMCtopE + pfMCtopMu
+pfMCtotalMerge = pfMCtotalTopE + pfMCtotalTopMu
+pfMCMerge.Sumw2()
+pfMCMerge.Divide(pfMCtotalMerge)
+
 datapassMerge = datapassTopE + datapassTopMu
+datapassMerge.Rebin(14)
+totaldataMerge = totaldataTopE + totaldataTopMu
+totaldataMerge.Rebin(14)
+datapassMerge.Sumw2()
+datapassMerge.Divide(totaldataMerge)
+
+
+MCpassTopE = passMCsubtractTopE.Clone("MCpassTopE")
+MCpassTopMu = passMCsubtractTopMu.Clone("MCpassTopMu")
 MCpassMerge = MCpassTopE + MCpassTopMu
+MCpassMerge.Rebin(14)
+totalMCmerge = totalMCtopE + totalMCtopMu
+totalMCmerge.Rebin(14)
+MCpassMerge.Sumw2()
+MCpassMerge.Divide(totalMCmerge)
 
 sfMerge = datapassMerge.Clone("sfMerge")
 sfMerge.Sumw2()
@@ -229,7 +258,7 @@ leg3 = myLegend(coordinate=[0.65,0.4,0.75,0.5])
 pfdataMerge.SetLineColor(1)
 pfdataMerge.SetMarkerStyle(20)
 pfdataMerge.SetLineWidth(2)
-pfdataMerge.SetMaximum(2.2)
+pfdataMerge.SetMaximum(1.4)
 pfdataMerge.GetYaxis().SetTitle("Fraction")
 pfdataMerge.GetXaxis().SetTickLength(0.03)
 pfdataMerge.GetXaxis().SetNdivisions(104)
@@ -241,11 +270,12 @@ pfdataMerge.GetXaxis().ChangeLabel(-2,-1,-1,-1,-1,-1,"Pass")
 leg3.AddEntry(pfdataMerge, "Subtracted Data", "lep")
 
 pfMCMerge.SetLineColor(870)
+pfMCMerge.SetMarkerColor(870)
 pfMCMerge.SetLineWidth(3)
-leg3.AddEntry(pfMCMerge, "tt", "l")
+leg3.AddEntry(pfMCMerge, "tt", "lep")
 
 pfdataMerge.Draw("e1")
-pfMCMerge.Draw("histsame")
+pfMCMerge.Draw("e1histsame")
 leg3.Draw()
 
 lt3 = TLatex()
@@ -264,16 +294,22 @@ datapassMerge.GetYaxis().SetTitle("Fraction")
 datapassMerge.GetYaxis().SetTitleSize(0.09)
 datapassMerge.GetYaxis().SetLabelSize(0.1)
 datapassMerge.GetYaxis().SetNdivisions(404)
-datapassMerge.SetMaximum(0.45)
+datapassMerge.SetMaximum(0.2)
 datapassMerge.SetMinimum(0.0)
-datapassMerge.GetXaxis().SetTitle("Pass")
-datapassMerge.GetXaxis().SetTitleSize(0.09)
-datapassMerge.GetXaxis().SetTitleOffset(0.4)
+datapassMerge.GetXaxis().SetTitle("")
+datapassMerge.GetXaxis().SetLabelOffset(0.02)
+datapassMerge.GetXaxis().SetLabelSize(0.09)
+datapassMerge.GetXaxis().SetNdivisions(104)
+datapassMerge.GetXaxis().ChangeLabel(2,-1,-1,-1,-1,-1,"Pass")
+datapassMerge.GetXaxis().ChangeLabel(1,-1,0)
+datapassMerge.GetXaxis().ChangeLabel(-1,-1,0)
 
 MCpassMerge.SetLineColor(870)
+MCpassMerge.SetMarkerColor(870)
 MCpassMerge.SetLineWidth(3)
+
 datapassMerge.Draw("e1")
-MCpassMerge.Draw("histsame")
+MCpassMerge.Draw("e1histsame")
 
 '''
 lt4 = TLatex()
@@ -292,6 +328,7 @@ SFfinal = round(SF, 2)
 SFtext = "SF = "+str(SFfinal)
 
 sfMerge.SetLineColor(797)
+sfMerge.SetMarkerColor(797)
 sfMerge.SetLineWidth(3)
 sfMerge.SetMaximum(1.2)
 sfMerge.SetMinimum(0.6)
@@ -302,7 +339,7 @@ sfMerge.GetXaxis().SetTickLength(0)
 sfMerge.GetYaxis().SetLabelSize(0.1)
 sfMerge.GetYaxis().SetNdivisions(404)
 
-sfMerge.Draw("hist")
+sfMerge.Draw("e1hist")
 
 pt = TPaveText(0.21, 0.72, 0.31, 0.8, "brNDC")
 pt.SetBorderSize(0)
