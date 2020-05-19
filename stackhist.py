@@ -110,7 +110,7 @@ def myPad():
     padMain.SetTopMargin(0.4)
     padMain.SetRightMargin(0.05)
     padMain.SetLeftMargin(0.17)
-    padMain.SetBottomMargin(0.0)
+    padMain.SetBottomMargin(0)
     padMain.SetTopMargin(0.1)
     
     padRatio = TPad("padRatio", "", 0.0, 0.0, 1.0, 0.25)
@@ -155,11 +155,11 @@ def myStack(colorlist_, backgroundlist_, signal_, prefit_, data_, postfit_, lege
     data_.SetMarkerStyle(20)
     data_.SetMarkerColor(1)
     data_.SetMarkerSize(1.5)
+    data_.GetXaxis().SetLabelSize(0)
     data_.GetYaxis().SetLabelSize(0.05)
     data_.GetYaxis().SetTitleOffset(1.2)
     data_.GetYaxis().SetTitleSize(0.05)
     data_.GetYaxis().SetTitle("Events/GeV")
-    leg.AddEntry(data_, "Data", "lep")
     data_.Draw("e1")
     
     hs = THStack("hs", "")
@@ -169,18 +169,10 @@ def myStack(colorlist_, backgroundlist_, signal_, prefit_, data_, postfit_, lege
         h.SetLineColor(colorlist_[j])
         hs.Add(h, "")
         leg.AddEntry(h,legendname_[j],"f")
-    #hs.GetYaxis().SetLabelSize(0.04)
-    #hs.GetYaxis().SetTitleOffset(1.2)
-    #hs.GetYaxis().SetTitleSize(0.04)
-    #hs.GetYaxis().SetTitle("Events/(200)")
     hs.Draw("same")
-    data_.Draw("e1same")
 
     postfit_.SetLineColor(634)
     postfit_.SetLineWidth(4)
-    postfit_.GetXaxis().SetLabelSize(0.07)
-    postfit_.GetYaxis().SetLabelSize(0.06)
-    postfit_.GetYaxis().SetTitleOffset(0.1)
     leg.AddEntry(postfit_, "Post-fit", "l")
     postfit_.Draw("histsame")
 
@@ -190,7 +182,10 @@ def myStack(colorlist_, backgroundlist_, signal_, prefit_, data_, postfit_, lege
     signal_.SetMarkerColor(2)
     leg.AddEntry(signal_, "Signal", "l")
     signal_.Draw("histsame")
-    
+
+    leg.AddEntry(data_, "Data", "lep")
+    data_.Draw("e1same")
+
     leg.Draw()
 
     drawE = drawenergy()
@@ -198,6 +193,8 @@ def myStack(colorlist_, backgroundlist_, signal_, prefit_, data_, postfit_, lege
         i.Draw()
 
     pad[2].cd()
+
+    gPad.GetUymax()
 
     leg1 = myLegend(coordinate=[0.5,0.39,0.87,0.6])
     leg1.SetTextSize(0.1)
