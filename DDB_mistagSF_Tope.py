@@ -1,7 +1,7 @@
 #created by Fasya Khuzaimah on 2020.04.17
 
 import ROOT
-from ROOT import TFile, TTree, TH1F, TCanvas, TLegend, TAxis, TLatex, TPad, TPaveText, gStyle
+from ROOT import TFile, TTree, TH1F, TCanvas, TLegend, TAxis, TLatex, TPad, TPaveText, gStyle, gPad
 import array as arr
 
 print "Top Electron Region"
@@ -425,6 +425,10 @@ print " "
 
 
 
+def dataPredRatio(data_, totalBkg_):
+    dataPredRatio_ = data_ - totalBkg_
+    dataPredRatio_.Divide(totalBkg_)
+    return dataPredRatio_
 
 #------------Overlap histograms in Full Canvas-------------#
 
@@ -448,81 +452,75 @@ h_unmatchFinal = h_unmatchFinal + h_ttHadFinal
 h_WmatchFinal = h_WmatchFinal + h_unmatchFinal
 h_TopMatchFinal = h_TopMatchFinal + h_WmatchFinal
 
-full = TCanvas("full","",900,700) #width-height
+full = TCanvas("full","",800,900) #width-height
+full.SetTopMargin(0.4)
+full.SetBottomMargin(0.05)
+full.SetRightMargin(0.1)
 full.SetLeftMargin(0.15)
 gStyle.SetOptStat(0)
+
+padMain = TPad("padMain", "", 0.0, 0.25, 1.0, 0.97)
+padMain.SetTopMargin(0.4)
+padMain.SetRightMargin(0.05)
+padMain.SetLeftMargin(0.17)
+padMain.SetBottomMargin(0.03)
+padMain.SetTopMargin(0.1)
+    
+padRatio = TPad("padRatio", "", 0.0, 0.0, 1.0, 0.25)
+padRatio.SetRightMargin(0.05)
+padRatio.SetLeftMargin(0.17)
+padRatio.SetTopMargin(0.05)
+padRatio.SetBottomMargin(0.3)
+padMain.Draw()
+padRatio.Draw()
 
 leg = TLegend(0.65,0.7,0.85,0.87)
 leg.SetBorderSize(0)
 leg.SetTextSize(0.027)
 
-#h_TopMatchFinal.Rebin(2)
+padMain.cd()
+
 h_TopMatchFinal.SetFillColor(821)
 h_TopMatchFinal.SetLineColor(821)#923
 h_TopMatchFinal.GetXaxis().SetTitle("Double b score")
+h_TopMatchFinal.GetXaxis().SetLabelSize(0)
 h_TopMatchFinal.GetYaxis().SetTitle("Events/Bin")
+h_TopMatchFinal.GetYaxis().SetTitleSize(0.05)
+h_TopMatchFinal.GetYaxis().SetLabelSize(0.05)
 h_TopMatchFinal.SetMaximum(totalmax)
 leg.AddEntry(h_TopMatchFinal, "Top (mtch.) ("+frac_match_text+"%)", "f")
 
-#h_WmatchFinal.Rebin(2)
 h_WmatchFinal.SetFillColor(822)
 h_WmatchFinal.SetLineColor(822)
-h_WmatchFinal.GetXaxis().SetTitle("Double b score")
-h_WmatchFinal.GetYaxis().SetTitle("Events/Bin")
-h_WmatchFinal.SetMaximum(totalmax)
 leg.AddEntry(h_WmatchFinal, "Top (W-mtch.) ("+frac_Wmatch_text+"%)","f")
 
-#h_unmatchFinal.Rebin(2)
 h_unmatchFinal.SetFillColor(813)
 h_unmatchFinal.SetLineColor(813)
-h_unmatchFinal.GetXaxis().SetTitle("Double b score")
-h_unmatchFinal.GetYaxis().SetTitle("Events/Bin")
-h_unmatchFinal.SetMaximum(totalmax)
 leg.AddEntry(h_unmatchFinal, "Top (unmtch.) ("+frac_unmatch_text+"%)","f")
 
 
 '''
-#h_ttHadFinal.Rebin(2)
 h_ttHadFinal.SetFillColor(800)
 h_ttHadFinal.SetLineColor(800)
-h_ttHadFinal.GetXaxis().SetTitle("Double b score")
-h_ttHadFinal.GetYaxis().SetTitle("Events/Bin")
-h_ttHadFinal.SetMaximum(totalmax)
 leg.AddEntry(h_ttHadFinal, "tt Hadronic","f")
 
 
-#h_ttLepFinal.Rebin(2)
 h_ttLepFinal.SetFillColor(809)
 h_ttLepFinal.SetLineColor(809)
-h_ttLepFinal.GetXaxis().SetTitle("Double b score")
-h_ttLepFinal.GetYaxis().SetTitle("Events/Bin")
-h_ttLepFinal.SetMaximum(totalmax)
 leg.AddEntry(h_ttLepFinal, "tt Leptonic","f")
 '''
 
-#h_sumWJetsFinal.Rebin(2)
 h_sumWJetsFinal.SetFillColor(854)
 h_sumWJetsFinal.SetLineColor(854)
-h_sumWJetsFinal.GetXaxis().SetTitle("Double b score")
-h_sumWJetsFinal.GetYaxis().SetTitle("Events/Bin")
-h_sumWJetsFinal.SetMaximum(totalmax)
 leg.AddEntry(h_sumWJetsFinal, "W+Jets","f")
 
-#h_sumDiboson.Rebin(2)
 h_sumDiboson.SetFillColor(627)
 h_sumDiboson.SetLineColor(627)
-h_sumDiboson.GetXaxis().SetTitle("Double b score")
-h_sumDiboson.GetYaxis().SetTitle("Events/Bin")
-h_sumDiboson.SetMaximum(totalmax)
 leg.AddEntry(h_sumDiboson, "Diboson","f")
 
-#h_SE.Rebin(2)
 h_SE.SetLineColor(1)
 h_SE.SetMarkerStyle(20)
 h_SE.SetMarkerSize(1.5)
-h_SE.GetXaxis().SetTitle("Double b score")
-h_SE.GetYaxis().SetTitle("Events/Bin")
-h_SE.SetMaximum(totalmax)
 leg.AddEntry(h_SE, "Data", "lep")
 
 #-------Draw Histogram in Full Canvas---------#
@@ -538,17 +536,38 @@ h_SE.Draw("e1same")
 leg.Draw()
 
 lt = TLatex()
-lt.DrawLatexNDC(0.23,0.85,"#scale[0.8]{CMS} #scale[0.65]{#bf{#it{Internal}}}")
-lt.DrawLatexNDC(0.23,0.8,"#scale[0.7]{#bf{t#bar{t} CR (e)}}")
-lt.DrawLatexNDC(0.23,0.75,"#scale[0.5]{#bf{2-prong (bq) enriched}}")
+lt.DrawLatexNDC(0.24,0.85,"#scale[0.8]{CMS} #scale[0.65]{#bf{#it{Internal}}}")
+lt.DrawLatexNDC(0.24,0.8,"#scale[0.7]{#bf{t#bar{t} CR (e)}}")
+lt.DrawLatexNDC(0.24,0.75,"#scale[0.5]{#bf{2-prong (bq) enriched}}")
 lt.DrawLatexNDC(0.71,0.92,"#scale[0.7]{#bf{41.5 fb^{-1} (13 TeV)}}")
+
+
+padRatio.cd()
+
+gPad.GetUymax()
+    
+ratio = dataPredRatio(data_ = h_SE, totalBkg_ = h_TopMatchFinal)
+ratio.SetLineColor(1)
+ratio.SetLineWidth(3)
+ratio.SetMarkerSize(1.5)
+ratio.GetXaxis().SetLabelSize(0.13)
+ratio.GetXaxis().SetTitleOffset(1)
+ratio.GetXaxis().SetTitleSize(0.13)
+ratio.GetXaxis().SetTickLength(0.1)
+ratio.GetYaxis().SetLabelSize(0.12)
+ratio.GetYaxis().SetTitleOffset(0.5)
+ratio.GetYaxis().SetTitleSize(0.13)
+ratio.GetYaxis().SetNdivisions(405)
+ratio.GetYaxis().SetTitle("#frac{Data-Pred}{Pred}")
+ratio.GetXaxis().SetTitle("Double b score")
+ratio.Draw("e1")
 
 #full.cd()
 #full.Modified()
 #full.Update()
 full.SaveAs("new_output/Tope_unsubtracted.pdf")
 
-
+'''
 #------------Overlap histograms in Subtract Canvas-------------#
 
 frac_Passed_text = str(round(frac_Passed, 2))
@@ -717,11 +736,6 @@ Cloned_frac_ttPassed.SetLineWidth(3)
 Cloned_frac_tt_data_passed.Draw("e1")
 Cloned_frac_ttPassed.Draw("e1histsame")
 
-'''
-lt4 = TLatex()
-lt4.DrawLatexNDC(0.21,0.72,"#scale[2.0]{Eff.}")
-lt4.Draw()
-'''
 
 #** Pad3 **#
 pad3.cd()
@@ -750,12 +764,6 @@ mistagSF.GetYaxis().SetNdivisions(404)
 mistagSF.GetYaxis().SetTitle(" ")
 
 mistagSF.Draw("e1hist")
-
-'''
-lt5 = TLatex()
-lt5.DrawLatexNDC(0.21,0.72,"#scale[2.0]{SF = 0.89}")
-lt5.Draw()
-'''
 
 pt = TPaveText(0.21, 0.72, 0.31, 0.8, "brNDC")
 pt.SetBorderSize(0)
@@ -800,3 +808,4 @@ h_totaldata.Write()
 h_tt.Write()
 
 outfile.Close()
+'''
