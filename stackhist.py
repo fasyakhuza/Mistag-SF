@@ -8,62 +8,7 @@ from PlotTemplates import *
 
 import array as arr
 
-# gethist function is under progress #
-'''
-def gethist(region, prefitbackgroundlist_, nbins=4, fname="fitDiagnostics.root"):
-    
-    openfile = TFile(fname)
-    
-    print region
-    print " "
-    
-    prefit_path = "shapes_prefit/"+region+"/"
-    postfit_path = "shapes_fit_b/"+region+"/"
-
-    
-    #get the histograms from prefit directory
-    
-    print prefit_path
-    print " "
-    
-    allhist = []
-    
-    for j in prefitbackgroundlist_:
-        allhist.append(openfile.Get(prefit_path + j))
-    
-    edges = arr.array('f')
-    for i in range(nbins):
-        low = allhist[0].GetXaxis().GetBinLowEdge(i+1)
-        edges.append(low)
-    up = allhist[0].GetXaxis().GetBinUpEdge(nbins)
-    edges.append(up)
-    #print edges
-
-    data = openfile.Get(prefit_path + "data")
-    datahist = TH1F("datahist","",nbins,edges)
-    nPoints = data.GetN()
-    for i in range(nPoints):
-        x = ROOT.Double(0)
-        y = ROOT.Double(0)
-        data.GetPoint(i, x, y)
-        k = datahist.FindFixBin(x)
-        #print "y", y
-        datahist.SetBinContent(k, y)
-        datahist.SetBinError(i+1, data.GetErrorY(i))
-    allhist.append(datahist)
-
-    
-    #get the histogram from post fit directory
-    
-    print postfit_path
-    print " "
-
-    totalBkgPostfit = openfile.Get(postfit_path + "total_background")
-    allhist.append(totalBkgPostfit)
-
-
-    return allhist
-'''
+# functions #
 
 def drawenergy():
     pt = TPaveText(0.1577181,0.905,0.9580537,0.96,"brNDC")
@@ -142,7 +87,68 @@ def dataPredRatio(data_, totalBkg_):
     dataPredRatio_.Divide(totalBkg_)
     return dataPredRatio_
 
-def myStack(colorlist_, backgroundlist_, signal_, prefit_, data_, postfit_, legendname_, pdfname_):
+def myStack(region, isSR, prefitbackgroundlist_, legendname_, colorlist_):
+    
+    nbins = 4
+    edges = arr.array('f')
+    
+    openfile = TFile("fitDiagnostics.root")
+    
+    print " "
+    print "*************************"
+    print region
+    print " "
+    
+    prefit_path = "shapes_prefit/"+region+"/"
+    postfit_path = "shapes_fit_b/"+region+"/"
+    
+    
+    #get the histograms from prefit directory
+    
+    print "get histograms from", prefit_path
+    print " "
+    
+    backgroundlist_ = []
+    
+    for j in prefitbackgroundlist_:
+        jh = openfile.Get(prefit_path + j)
+        backgroundlist_.append(jh)
+
+    if isSR: signal_ = openfile.Get(prefit_path + "signal")
+    
+    edges = arr.array('f')
+    for i in range(nbins):
+        low = backgroundlist_[0].GetXaxis().GetBinLowEdge(i+1)
+        edges.append(low)
+    up = backgroundlist_[0].GetXaxis().GetBinUpEdge(nbins)
+    edges.append(up)
+
+    data = openfile.Get(prefit_path + "data")
+    data_ = TH1F("data_","",nbins,edges)
+    nPoints = data.GetN()
+    for i in range(nPoints):
+        x = ROOT.Double(0)
+        y = ROOT.Double(0)
+        data.GetPoint(i, x, y)
+        k = data_.FindFixBin(x)
+        data_.SetBinContent(k, y)
+        data_.SetBinError(i+1, data.GetErrorY(i))
+
+    prefit_ = openfile.Get(prefit_path + "total_background")
+
+
+    #get the histogram from post fit directory
+
+    print "get histograms from", postfit_path
+    print " "
+    
+    postfit_ = openfile.Get(postfit_path + "total_background")
+
+
+
+
+    # draw the histograms #
+
     leg = myLegend(ncol = 2)
     pad = myPad()
     
@@ -176,12 +182,13 @@ def myStack(colorlist_, backgroundlist_, signal_, prefit_, data_, postfit_, lege
     leg.AddEntry(postfit_, "Post-fit", "l")
     postfit_.Draw("histsame")
 
-    signal_.SetLineColor(4)
-    signal_.SetLineWidth(3)
-    signal_.SetMarkerStyle(21)
-    signal_.SetMarkerColor(2)
-    leg.AddEntry(signal_, "Signal", "l")
-    signal_.Draw("histsame")
+    if isSR:
+        signal_.SetLineColor(4)
+        signal_.SetLineWidth(3)
+        signal_.SetMarkerStyle(21)
+        signal_.SetMarkerColor(2)
+        leg.AddEntry(signal_, "Signal", "l")
+        signal_.Draw("histsame")
 
     leg.AddEntry(data_, "Data", "lep")
     data_.Draw("e1same")
@@ -229,79 +236,35 @@ def myStack(colorlist_, backgroundlist_, signal_, prefit_, data_, postfit_, lege
 
     pad[0].Modified()
     pad[0].Update()
-    pad[0].SaveAs(pdfname_+".pdf")
+    pad[0].SaveAs(region+".pdf")
 
-# Finish defining functions #
+
+
+#--------------------------------------------------------------------------------#
+                            # Finish defining functions #
 #--------------------------------------------------------------------------------#
 
 
 
+print "making stack plots"
+print " "
 
-nbins = 4
-edges = arr.array('f')
-#min = 0.0
-#max = 10.0
-openfile = TFile("fitDiagnostics.root")
+regionlist = ["SR", "TOPE", "TOPMU", "WE", "WMU", "ZEE", "ZMUMU"]
+for i in range(len(regionlist)):
+    if (i == 0):
+        isSR = True
+        prefitbkglist = ["diboson", "qcd", "singlet", "smh", "tt", "wjets", "zjets"]
+        legendlist = ["WWW/WZ/ZZ", "QCD", "Single t", "SM H", "t#bar{t}", "W(l#nu)+Jets", "Z(ll)+Jets"]
+        color = [4, 922, 802, 422, 812, 6, 798]
+    if (i == 1) or (i == 2) or (i == 3) or (i == 4):
+        isSR = False
+        prefitbkglist = ["diboson", "qcd", "singlet", "smh", "tt", "wjets", "dyjets"]
+        legendlist = ["WWW/WZ/ZZ", "QCD", "Single t", "SM H", "t#bar{t}", "W(l#nu)+Jets", "DY+Jets"]
+        color = [4, 922, 802, 422, 812, 6, 5]
+    if (i == 5) or (i == 6):
+        isSR = False
+        prefitbkglist = ["diboson", "singlet", "smh", "tt", "dyjets"]
+        legendlist = ["WWW/WZ/ZZ", "Single t", "SM H", "t#bar{t}", "DY+Jets"]
+        color = [4, 802, 422, 812, 5]
 
-
-#------------------------shapes_prefit/SR------------------------------#
-prefitpathSR = "shapes_prefit/SR/"
-    
-bkglist = []
-    
-#get the histograms in shapes_prefit/SR
-    
-dibosonSR = openfile.Get(prefitpathSR+"diboson")
-bkglist.append(dibosonSR)
-qcdSR = openfile.Get(prefitpathSR+"qcd")
-bkglist.append(qcdSR)
-stSR = openfile.Get(prefitpathSR+"singlet")
-bkglist.append(stSR)
-smhSR = openfile.Get(prefitpathSR+"smh")
-bkglist.append(smhSR)
-ttSR = openfile.Get(prefitpathSR+"tt")
-bkglist.append(ttSR)
-wjetsSR = openfile.Get(prefitpathSR+"wjets")
-bkglist.append(wjetsSR)
-zjetsSR = openfile.Get(prefitpathSR+"zjets")
-bkglist.append(zjetsSR)
-    
-signalSR = openfile.Get(prefitpathSR+"signal")
-prefitSR = openfile.Get(prefitpathSR+"total_background")
-    
-for i in range(nbins):
-    low = dibosonSR.GetXaxis().GetBinLowEdge(i+1)
-    edges.append(low)
-up = dibosonSR.GetXaxis().GetBinUpEdge(nbins)
-edges.append(up)
-    
-dataSR = openfile.Get(prefitpathSR+"data")
-datahistSR = TH1F("datahistSR","",nbins,edges)
-nPointsSR = dataSR.GetN()
-for i in range(nPointsSR):
-    x = ROOT.Double(0)
-    y = ROOT.Double(0)
-    dataSR.GetPoint(i, x, y)
-    k = datahistSR.FindFixBin(x)
-    datahistSR.SetBinContent(k,y)
-    datahistSR.SetBinError(i+1, dataSR.GetErrorY(i))
-    
-    
-postfitpathSR = "shapes_fit_b/SR/"
-    
-#get the histogram in shapes_fit_b/SR
-    
-postfitSR = openfile.Get(postfitpathSR + "total_background")
-
-#Make the Stack#
-
-#["diboson", "qcd", "singlet", "smh", "tt", "wjets", "zjets"]
-makeStack = myStack(colorlist_=[874, 922, 802, 422, 799, 6, 811], backgroundlist_ = bkglist, legendname_ = ["WWW/WZ/ZZ", "QCD", "Single t", "SM H", "t#bar{t}", "W(l#nu)+jets", "Z(ll)+jets"], data_ = datahistSR, signal_ = signalSR, prefit_ = prefitSR, postfit_ = postfitSR, pdfname_="SRtest")
-
-
-
-# SR
-
-#SRhist = gethist(region="SR", prefitbackgroundlist_ = ["diboson", "qcd", "singlet", "smh", "tt", "wjets", "zjets", "signal", "total_background"], nbins=4, fname="fitDiagnostics.root")
-
-#makeStack = myStack(colorlist_=[4, 922, 802, 422, 799, 6, 812], backgroundlist_ = SRhist, legendname_ = ["WWW/WZ/ZZ", "QCD", "Single t", "SM h", "t#bar{t}", "W(l#nu)+jets", "Z(ll)+jets"], signal_ = SRhist[7], prefit_ = SRhist[8], data_ = SRhist[9], postfit_ = SRhist[10], pdfname_="SRtest")
+    makeStack = myStack(region = regionlist[i], isSR = isSR, prefitbackgroundlist_ = prefitbkglist, legendname_ = legendlist, colorlist_ = color)
