@@ -153,19 +153,47 @@ def myStack(colorlist_, backgroundlist_, legendname_):
         leg1.AddEntry(h,legendname_[j],"f")
     return [hs, leg1]
 
-
+def dataPredRatio(data_, totalBkg_):
+    dataPredRatio_ = data_ - totalBkg_
+    dataPredRatio_.Divide(totalBkg_)
+    return dataPredRatio_
 
 print "draw histograms"
 print " "
 #----------------------- canvas 1 -----------------------#
 
-c1 = myCanvas(c = "c1")
+c1 = TCanvas("c1","",800,900) #width-height
+c1.SetTopMargin(0.4)
+c1.SetBottomMargin(0.05)
+c1.SetRightMargin(0.1)
+c1.SetLeftMargin(0.15)
+gStyle.SetOptStat(0)
+
+padMain = TPad("padMain", "", 0.0, 0.25, 1.0, 0.97)
+padMain.SetTopMargin(0.4)
+padMain.SetRightMargin(0.05)
+padMain.SetLeftMargin(0.17)
+padMain.SetBottomMargin(0.03)
+padMain.SetTopMargin(0.1)
+
+padRatio = TPad("padRatio", "", 0.0, 0.0, 1.0, 0.25)
+padRatio.SetRightMargin(0.05)
+padRatio.SetLeftMargin(0.17)
+padRatio.SetTopMargin(0.05)
+padRatio.SetBottomMargin(0.3)
+padMain.Draw()
+padRatio.Draw()
+
+padMain.cd()
+
 gPad.GetUymax()
 leg1 = myLegend(coordinate=[0.45,0.57,0.65,0.6])
 
 unsubtractedDataMerge.SetLineColor(1)
 unsubtractedDataMerge.SetMarkerStyle(20)
 unsubtractedDataMerge.SetMarkerSize(1.5)
+unsubtractedDataMerge.GetXaxis().SetLabelSize(0)
+unsubtractedDataMerge.GetXaxis().SetTitleSize(0)
 unsubtractedDataMerge.GetXaxis().SetTitle("Double b score")
 unsubtractedDataMerge.GetYaxis().SetTitle("Events/Bin")
 leg1.AddEntry(unsubtractedDataMerge, "Data", "lep")
@@ -182,6 +210,29 @@ lt.DrawLatexNDC(0.23,0.85,"#scale[0.8]{CMS} #scale[0.65]{#bf{#it{Internal}}}")
 lt.DrawLatexNDC(0.23,0.8,"#scale[0.7]{#bf{t#bar{t} CR (e+#mu)}}")
 lt.DrawLatexNDC(0.23,0.75,"#scale[0.5]{#bf{2-prong (bq) enriched}}")
 lt.DrawLatexNDC(0.71,0.92,"#scale[0.7]{#bf{41.5 fb^{-1} (13 TeV)}}")
+
+
+padRatio.cd()
+
+gPad.GetUymax()
+
+h_totalBkg = topmatchMerge.Clone("h_totalBkg")
+h_totalBkg = dibosonMerge + wjetsMerge + unmatchMerge + WmatchMerge + h_totalBkg
+ratio = dataPredRatio(data_ = unsubtractedDataMerge, totalBkg_ = h_totalBkg)
+ratio.SetLineColor(1)
+ratio.SetLineWidth(3)
+ratio.SetMarkerSize(1.5)
+ratio.GetXaxis().SetLabelSize(0.13)
+ratio.GetXaxis().SetTitleOffset(1)
+ratio.GetXaxis().SetTitleSize(0.13)
+ratio.GetXaxis().SetTickLength(0.1)
+ratio.GetYaxis().SetLabelSize(0.12)
+ratio.GetYaxis().SetTitleOffset(0.5)
+ratio.GetYaxis().SetTitleSize(0.13)
+ratio.GetYaxis().SetNdivisions(405)
+ratio.GetYaxis().SetTitle("#frac{Data-Pred}{Pred}")
+ratio.GetXaxis().SetTitle("Double b score")
+ratio.Draw("e1")
 
 c1.SaveAs("Merge_all.pdf")
 
