@@ -236,7 +236,7 @@ def myStack(region, isSR, prefitbackgroundlist_, legendname_, colorlist_):
 
     pad[0].Modified()
     pad[0].Update()
-    pad[0].SaveAs(region+".pdf")
+    pad[0].SaveAs("Stack_Plots/"+region+".pdf") #you can change the "Stack_Plots" directory to be your directory
 
 
 
