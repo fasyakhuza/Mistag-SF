@@ -198,6 +198,14 @@ def myStack(region, isSR, prefitbackgroundlist_, legendname_, colorlist_):
     drawE = drawenergy()
     for i in drawE:
         i.Draw()
+    
+    pt4 = TPaveText(0.2577181,0.815,0.5580537,0.875,"brNDC")
+    pt4.SetBorderSize(0)
+    pt4.SetTextAlign(12)
+    pt4.SetFillStyle(0)
+    pt4.SetTextFont(52)
+    pt4.AddText(region)
+    pt4.Draw()
 
     pad[2].cd()
 
