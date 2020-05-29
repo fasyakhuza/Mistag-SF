@@ -1,11 +1,13 @@
 #created by Fasya Khuzaimah on 2020.05.12
 
+import os
 import ROOT
-from ROOT import TFile, TH1F, TGraph, TGraphAsymmErrors, gPad, gStyle
+from ROOT import TFile, TH1F, TGraph, TGraphAsymmErrors, TMath, gPad, gStyle
 
 import PlotTemplates
 from PlotTemplates import *
 
+import array as arr
 
 openf = TFile("monoHbb_WS.root")
 
@@ -61,6 +63,44 @@ def drawenergy(is2017 = True, text_=" Internal", data = True):
     
     return [pt,pt1,pt2]
 
+def makeUncHisto(h):
+    nbins = h.GetNbinsX()
+    binedges = arr.array('f')
+    contents = []
+    errors = []
+    for i in range(nbins):
+        iContent = h.GetBinContent(i+1)
+        contents.append(iContent)
+        iError = h.GetBinError(i+1)
+        errors.append(iError)
+        iLowEdge = h.GetXaxis().GetBinLowEdge(i+1)
+        binedges.append(iLowEdge)
+    lastEdge = h.GetXaxis().GetBinUpEdge(nbins)
+    binedges.append(lastEdge)
+
+    sysUnc = []
+    for l in contents:
+        sysUnc.append(l * 0.05)
+
+    totalUnc = []
+    for j in range(nbins):
+        jtotalUnc = TMath.Sqrt(errors[j]**2 + sysUnc[j]**2)
+        totalUnc.append(jtotalUnc)
+
+    #print "bin contents", contents
+    #print "bin errors", errors
+    #print "systematic uncertainties", sysUnc
+    #print "total Unc", totalUnc
+    #print "bin edges", binedges
+
+    h_totalUnc = TH1F("h_totalUnc","", nbins, binedges)
+    for k in range(nbins):
+        h_totalUnc.SetBinContent(k+1, contents[k])
+        h_totalUnc.SetBinError(k+1, totalUnc[k])
+    h_totalUnc.SetFillColor(33)
+
+    return h_totalUnc
+
 #** Draw TOPMU Histogram **#
 
 c1 = PlotTemplates.myCanvas()
@@ -72,14 +112,21 @@ gStyle.SetOptTitle(0)
 h_topMu = PlotTemplates.Save1DHisto(topMu, c1, "Recoil", "Transferfactor (TopMu)")
 h_topMu.SetLineWidth(2)
 h_topMu.SetMarkerStyle(20)
+h_topMu.SetMarkerSize(1.1)
 h_topMu.Draw("e1")
+
+h_Unc1 = makeUncHisto(h = topMu)
+h_Unc1.Draw("e2same")
+
+h_topMu.Draw("e1same")
 
 E1 = drawenergy()
 for i in E1:
     i.Draw()
 
+c1.Modified()
 c1.Update()
-c1.SaveAs("transferfactor/TopMu.pdf")
+c1.SaveAs("transferfactorPlots/TopMu.pdf")
 
 #** Draw TOPE Histogram **#
 
@@ -94,12 +141,17 @@ h_topE.SetLineWidth(2)
 h_topE.SetMarkerStyle(20)
 h_topE.Draw("e1")
 
+h_Unc2 = makeUncHisto(h = topE)
+h_Unc2.Draw("e2same")
+
+h_topE.Draw("e1same")
+
 E2 = drawenergy()
 for i in E2:
     i.Draw()
 
 c2.Update()
-c2.SaveAs("transferfactor/TopE.pdf")
+c2.SaveAs("transferfactorPlots/TopE.pdf")
 
 #** Draw WE Histogram **#
 
@@ -114,12 +166,17 @@ h_WE.SetLineWidth(2)
 h_WE.SetMarkerStyle(20)
 h_WE.Draw("e1")
 
+h_Unc3 = makeUncHisto(h = WE)
+h_Unc3.Draw("e2same")
+
+h_WE.Draw("e1same")
+
 E3 = drawenergy()
 for i in E3:
     i.Draw()
 
 c3.Update()
-c3.SaveAs("transferfactor/WE.pdf")
+c3.SaveAs("transferfactorPlots/WE.pdf")
 
 #** Draw WMU Histogram **#
 
@@ -134,12 +191,17 @@ h_WMu.SetLineWidth(2)
 h_WMu.SetMarkerStyle(20)
 h_WMu.Draw("e1")
 
+h_Unc4 = makeUncHisto(h = WMu)
+h_Unc4.Draw("e2same")
+
+h_WMu.Draw("e1same")
+
 E4 = drawenergy()
 for i in E4:
     i.Draw()
 
 c4.Update()
-c4.SaveAs("transferfactor/WMu.pdf")
+c4.SaveAs("transferfactorPlots/WMu.pdf")
 
 #** Draw ZMUMU Histogram **#
 
@@ -154,12 +216,17 @@ h_ZMumu.SetLineWidth(2)
 h_ZMumu.SetMarkerStyle(20)
 h_ZMumu.Draw("e1")
 
+h_Unc5 = makeUncHisto(h = ZMumu)
+h_Unc5.Draw("e2same")
+
+h_ZMumu.Draw("e1same")
+
 E5 = drawenergy()
 for i in E5:
     i.Draw()
 
 c5.Update()
-c5.SaveAs("transferfactor/ZMuMu.pdf")
+c5.SaveAs("transferfactorPlots/ZMuMu.pdf")
 
 #** Draw ZEE Histogram **#
 
@@ -174,11 +241,16 @@ h_ZEE.SetLineWidth(2)
 h_ZEE.SetMarkerStyle(20)
 h_ZEE.Draw("e1")
 
+h_Unc6 = makeUncHisto(h = ZEE)
+h_Unc6.Draw("e2same")
+
+h_ZEE.Draw("e1same")
+
 E6 = drawenergy()
 for i in E6:
     i.Draw()
 
 c6.Update()
-c6.SaveAs("transferfactor/ZEE.pdf")
+c6.SaveAs("transferfactorPlots/ZEE.pdf")
 
 
