@@ -307,7 +307,7 @@ def drawenergy(is2017 = True, text_=" Internal", data = True):
     pt2.SetTextSize(lumitextsize)
     
     pavetext = ''
-    if is2017 and data: pavetext = "41.1 fb^{-1} (13 TeV)"
+    if is2017 and data: pavetext = "41.5 fb^{-1} (13 TeV)"
     if (not is2017) and data: pavetext = "(13 TeV)"
     
     if is2017 and not data: pavetext = "(13 TeV)"
