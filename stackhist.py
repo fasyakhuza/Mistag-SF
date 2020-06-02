@@ -1,5 +1,6 @@
 #created by Fasya Khuzaimah on 2020.05.14
 
+import os
 import ROOT
 from ROOT import TFile, TH1F, TGraph, TGraphAsymmErrors, THStack, TCanvas, TLegend, TPad, gStyle, gPad
 
@@ -87,20 +88,20 @@ def dataPredRatio(data_, totalBkg_):
     dataPredRatio_.Divide(totalBkg_)
     return dataPredRatio_
 
-def myStack(region, isSR, prefitbackgroundlist_, legendname_, colorlist_):
+def myStack(fname_, region_, isSR, prefitbackgroundlist_, legendname_, colorlist_, regionName_, dirName_, isMerged, pad1ymax_):
     
     nbins = 4
     edges = arr.array('f')
     
-    openfile = TFile("fitDiagnostics.root")
+    openfile = TFile(fname_)
     
     print " "
     print "*************************"
-    print region
+    print region_, "for", dirName_
     print " "
     
-    prefit_path = "shapes_prefit/"+region+"/"
-    postfit_path = "shapes_fit_b/"+region+"/"
+    prefit_path = "shapes_prefit/"+region_+"/"
+    postfit_path = "shapes_fit_b/"+region_+"/"
     
     
     #get the histograms from prefit directory
@@ -165,6 +166,8 @@ def myStack(region, isSR, prefitbackgroundlist_, legendname_, colorlist_):
     data_.GetYaxis().SetLabelSize(0.05)
     data_.GetYaxis().SetTitleOffset(1.2)
     data_.GetYaxis().SetTitleSize(0.05)
+    data_.GetYaxis().SetNdivisions(510)
+    data_.SetMaximum(pad1ymax_)
     data_.GetYaxis().SetTitle("Events/GeV")
     data_.Draw("e1")
     
@@ -175,7 +178,7 @@ def myStack(region, isSR, prefitbackgroundlist_, legendname_, colorlist_):
         h.SetLineColor(colorlist_[j])
         hs.Add(h, "")
         leg.AddEntry(h,legendname_[j],"f")
-    hs.Draw("same")
+    hs.Draw("histsame")
 
     postfit_.SetLineColor(634)
     postfit_.SetLineWidth(4)
@@ -183,10 +186,10 @@ def myStack(region, isSR, prefitbackgroundlist_, legendname_, colorlist_):
     postfit_.Draw("histsame")
 
     if isSR:
-        signal_.SetLineColor(4)
-        signal_.SetLineWidth(3)
+        signal_.SetLineColor(416)
+        signal_.SetLineWidth(4)
         signal_.SetMarkerStyle(21)
-        signal_.SetMarkerColor(2)
+        #signal_.SetMarkerColor(824)
         leg.AddEntry(signal_, "Signal", "l")
         signal_.Draw("histsame")
 
@@ -204,14 +207,14 @@ def myStack(region, isSR, prefitbackgroundlist_, legendname_, colorlist_):
     pt4.SetTextAlign(12)
     pt4.SetFillStyle(0)
     pt4.SetTextFont(52)
-    pt4.AddText(region)
+    pt4.AddText(regionName_)
     pt4.Draw()
 
     pad[2].cd()
 
     gPad.GetUymax()
 
-    leg1 = myLegend(coordinate=[0.5,0.39,0.87,0.6])
+    leg1 = myLegend(coordinate=[0.5,0.80,0.87,0.95])
     leg1.SetTextSize(0.1)
 
     prefithist = dataPredRatio(data_ = data_, totalBkg_ = prefit_)
@@ -223,8 +226,10 @@ def myStack(region, isSR, prefitbackgroundlist_, legendname_, colorlist_):
     prefithist.GetXaxis().SetTitleSize(0.13)
     prefithist.GetXaxis().SetTickLength(0.1)
     prefithist.GetYaxis().SetLabelSize(0.12)
+    prefithist.GetYaxis().SetRangeUser(-0.5,0.5)
     prefithist.GetYaxis().SetTitleOffset(0.5)
     prefithist.GetYaxis().SetTitleSize(0.13)
+    prefithist.GetYaxis().SetNdivisions(505)
     prefithist.GetYaxis().SetTitle("#frac{Data-Pred}{Pred}")
     prefithist.GetXaxis().SetTitle("Recoil (GeV)")
     leg1.AddEntry(prefithist, "Prefit", "lep")
@@ -242,10 +247,17 @@ def myStack(region, isSR, prefitbackgroundlist_, legendname_, colorlist_):
 
     leg1.Draw()
 
+    if not os.path.exists(dirName_):
+        os.mkdir(dirName_)
+
     pad[0].Modified()
     pad[0].Update()
-    pad[0].SaveAs("Stack_Plots/"+region+".pdf") #you can change the "Stack_Plots" directory to be your directory
-
+    if isMerged:
+        pad[0].SaveAs(dirName_+region_+"_merged_2017.pdf")
+        pad[0].SaveAs(dirName_+region_+"_merged_2017.png")
+    if not isMerged:
+        pad[0].SaveAs(dirName_+region_+"_resolved_2017.pdf")
+        pad[0].SaveAs(dirName_+region_+"_resolved_2017.png")
 
 
 #--------------------------------------------------------------------------------#
@@ -258,21 +270,25 @@ print "making stack plots"
 print " "
 
 regionlist = ["SR", "TOPE", "TOPMU", "WE", "WMU", "ZEE", "ZMUMU"]
+regionName = ["SR", "Top (e)", "Top (#mu)", "W (e)", "W (#mu)", "Z (ee)", "Z (#mu#mu)"]
+
 for i in range(len(regionlist)):
     if (i == 0):
         isSR = True
         prefitbkglist = ["diboson", "qcd", "singlet", "smh", "tt", "wjets", "zjets"]
-        legendlist = ["WWW/WZ/ZZ", "QCD", "Single t", "SM H", "t#bar{t}", "W(l#nu)+Jets", "Z(ll)+Jets"]
-        color = [4, 922, 802, 422, 812, 6, 798]
+        legendlist = ["WW/WZ/ZZ", "QCD", "Single t", "SM H", "t#bar{t}", "W(l#nu)+Jets", "Z(ll)+Jets"]
+        color = [601, 922, 802, 631, 799, 878, 856]
     if (i == 1) or (i == 2) or (i == 3) or (i == 4):
         isSR = False
         prefitbkglist = ["diboson", "qcd", "singlet", "smh", "tt", "wjets", "dyjets"]
-        legendlist = ["WWW/WZ/ZZ", "QCD", "Single t", "SM H", "t#bar{t}", "W(l#nu)+Jets", "DY+Jets"]
-        color = [4, 922, 802, 422, 812, 6, 5]
+        legendlist = ["WW/WZ/ZZ", "QCD", "Single t", "SM H", "t#bar{t}", "W(l#nu)+Jets", "DY+Jets"]
+        color = [601, 922, 802, 631, 799, 878, 417]
     if (i == 5) or (i == 6):
         isSR = False
         prefitbkglist = ["diboson", "singlet", "smh", "tt", "dyjets"]
-        legendlist = ["WWW/WZ/ZZ", "Single t", "SM H", "t#bar{t}", "DY+Jets"]
-        color = [4, 802, 422, 812, 5]
+        legendlist = ["WW/WZ/ZZ", "Single t", "SM H", "t#bar{t}", "DY+Jets"]
+        color = [601, 802, 631, 799, 417]
 
-    makeStack = myStack(region = regionlist[i], isSR = isSR, prefitbackgroundlist_ = prefitbkglist, legendname_ = legendlist, colorlist_ = color)
+    makeStackMerged = myStack(fname_ = "fitDiagnostics_merged_2017_data.root", region_ = regionlist[i], isSR = isSR, prefitbackgroundlist_ = prefitbkglist, legendname_ = legendlist, colorlist_ = color, regionName_ = regionName[i], dirName_='Stack_Plots/2017_merged/', isMerged = True, pad1ymax_ = 100)
+
+    makeStackResolved = myStack(fname_ = "fitDiagnostics_resolved_2017_data.root", region_ = regionlist[i], isSR = isSR, prefitbackgroundlist_ = prefitbkglist, legendname_ = legendlist, colorlist_ = color, regionName_ = regionName[i], dirName_='Stack_Plots/2017_resolved/', isMerged = False, pad1ymax_ = 1000)

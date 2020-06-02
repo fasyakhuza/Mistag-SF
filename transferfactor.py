@@ -253,4 +253,3 @@ for i in E6:
 c6.Update()
 c6.SaveAs("transferfactorPlots/ZEE.pdf")
 
-
