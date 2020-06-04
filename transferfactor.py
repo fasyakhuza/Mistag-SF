@@ -105,6 +105,9 @@ def makeUncHisto(h):
 
 c1 = PlotTemplates.myCanvas()
 
+leg1 = PlotTemplates.SetLegend()
+
+
 gPad.GetUymax()
 gStyle.SetOptStat(0)
 gStyle.SetOptTitle(0)
@@ -116,9 +119,14 @@ h_topMu.SetMarkerSize(1.1)
 h_topMu.Draw("e1")
 
 h_Unc1 = makeUncHisto(h = topMu)
+h_Unc1.SetLineColor(0)
 h_Unc1.Draw("e2same")
 
 h_topMu.Draw("e1same")
+
+leg1.AddEntry(h_topMu, "Transfer Factor", "lep")
+leg1.AddEntry(h_Unc1, "stat + syst.", "f")
+leg1.Draw()
 
 E1 = drawenergy()
 for i in E1:
@@ -132,6 +140,9 @@ c1.SaveAs("transferfactorPlots/TopMu.pdf")
 
 c2 = PlotTemplates.myCanvas()
 
+leg2 = PlotTemplates.SetLegend()
+
+
 gPad.GetUymax()
 gStyle.SetOptStat(0)
 gStyle.SetOptTitle(0)
@@ -142,9 +153,14 @@ h_topE.SetMarkerStyle(20)
 h_topE.Draw("e1")
 
 h_Unc2 = makeUncHisto(h = topE)
+h_Unc2.SetLineColor(0)
 h_Unc2.Draw("e2same")
 
 h_topE.Draw("e1same")
+
+leg2.AddEntry(h_topE, "Transfer Factor", "lep")
+leg2.AddEntry(h_Unc2, "stat + syst.", "f")
+leg2.Draw()
 
 E2 = drawenergy()
 for i in E2:
@@ -157,6 +173,9 @@ c2.SaveAs("transferfactorPlots/TopE.pdf")
 
 c3 = PlotTemplates.myCanvas()
 
+leg3 = PlotTemplates.SetLegend()
+
+
 gPad.GetUymax()
 gStyle.SetOptStat(0)
 gStyle.SetOptTitle(0)
@@ -167,9 +186,14 @@ h_WE.SetMarkerStyle(20)
 h_WE.Draw("e1")
 
 h_Unc3 = makeUncHisto(h = WE)
+h_Unc3.SetLineColor(0)
 h_Unc3.Draw("e2same")
 
 h_WE.Draw("e1same")
+
+leg3.AddEntry(h_WE, "Transfer Factor", "lep")
+leg3.AddEntry(h_Unc3, "stat + syst.", "f")
+leg3.Draw()
 
 E3 = drawenergy()
 for i in E3:
@@ -182,6 +206,9 @@ c3.SaveAs("transferfactorPlots/WE.pdf")
 
 c4 = PlotTemplates.myCanvas()
 
+leg4 = PlotTemplates.SetLegend()
+
+
 gPad.GetUymax()
 gStyle.SetOptStat(0)
 gStyle.SetOptTitle(0)
@@ -192,9 +219,14 @@ h_WMu.SetMarkerStyle(20)
 h_WMu.Draw("e1")
 
 h_Unc4 = makeUncHisto(h = WMu)
+h_Unc4.SetLineColor(0)
 h_Unc4.Draw("e2same")
 
 h_WMu.Draw("e1same")
+
+leg4.AddEntry(h_WMu, "Transfer Factor", "lep")
+leg4.AddEntry(h_Unc4, "stat + syst.", "f")
+leg4.Draw()
 
 E4 = drawenergy()
 for i in E4:
@@ -207,6 +239,8 @@ c4.SaveAs("transferfactorPlots/WMu.pdf")
 
 c5 = PlotTemplates.myCanvas()
 
+leg5 = PlotTemplates.SetLegend()
+
 gPad.GetUymax()
 gStyle.SetOptStat(0)
 gStyle.SetOptTitle(0)
@@ -217,9 +251,14 @@ h_ZMumu.SetMarkerStyle(20)
 h_ZMumu.Draw("e1")
 
 h_Unc5 = makeUncHisto(h = ZMumu)
+h_Unc5.SetLineColor(0)
 h_Unc5.Draw("e2same")
 
 h_ZMumu.Draw("e1same")
+
+leg5.AddEntry(h_ZMumu, "Transfer Factor", "lep")
+leg5.AddEntry(h_Unc5, "stat + syst.", "f")
+leg5.Draw()
 
 E5 = drawenergy()
 for i in E5:
@@ -232,6 +271,8 @@ c5.SaveAs("transferfactorPlots/ZMuMu.pdf")
 
 c6 = PlotTemplates.myCanvas()
 
+leg6 = PlotTemplates.SetLegend()
+
 gPad.GetUymax()
 gStyle.SetOptStat(0)
 gStyle.SetOptTitle(0)
@@ -242,9 +283,14 @@ h_ZEE.SetMarkerStyle(20)
 h_ZEE.Draw("e1")
 
 h_Unc6 = makeUncHisto(h = ZEE)
+h_Unc6.SetLineColor(0)
 h_Unc6.Draw("e2same")
 
 h_ZEE.Draw("e1same")
+
+leg6.AddEntry(h_ZEE, "Transfer Factor", "lep")
+leg6.AddEntry(h_Unc6, "stat + syst.", "f")
+leg6.Draw()
 
 E6 = drawenergy()
 for i in E6:
